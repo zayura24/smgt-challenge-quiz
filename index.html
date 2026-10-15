@@ -1,0 +1,1837 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SMGT Challenge: Seberapa Tangguh Lu?!</title>
+<meta name="description" content="SMGT Challenge: 10 soal, 2 menit, gratis. Dapetin skor tangguh lu, tokoh di balik tenaga lu, 3 insight, dan Challenge 7 Hari.">
+<meta property="og:title" content="SMGT Challenge: Seberapa Tangguh Lu?!">
+<meta property="og:description" content="10 soal, 2 menit. Buka kartu tokoh lu dan lihat gelar lu: Terkuat se-Kota sampai Terkuat di Bumi.">
+<meta name="theme-color" content="#120A08">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="cellos-juara.jpg">
+<link rel="preload" as="font" type="font/woff2" href="vendor/phosphor/Phosphor-Bold.woff2" crossorigin>
+<link rel="stylesheet" href="vendor/phosphor/style.css">
+<style>
+/* ===== GANTI WARNA BRAND SMGT DI SINI =====
+   Semua warna halaman diambil dari token di :root. Ganti --gold (aksen), --red/--maroon (tombol utama), --bg (latar).
+   Warna kartu tokoh di kanvas ada di fungsi buatKartu (objek W) dan di .face.front.tA..tD. */
+:root{
+  --bg:#120A08; --bg2:#1B1210; --raise:#21161300; --panel:#1E1411;
+  --line:rgba(252,234,148,.14); --line2:rgba(252,234,148,.32);
+  --gold:#FCEA94; --gold-d:#C9A227; --maroon:#791010; --red:#C42222;
+  --tx:#FBF3E6; --mut:rgba(251,243,230,.68); --mut2:rgba(251,243,230,.5);
+  --A:#791010; --B:#1B1412; --C:#F3ECDF; --D:#FCEA94;
+  /* bentuk (dikunci): panel 20px, tombol/input/kartu kecil 14px, ikon kotak 12px, chip/pil penuh */
+  --r-panel:20px; --r-btn:14px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:Poppins,system-ui,sans-serif;line-height:1.55;min-height:100dvh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input{font:inherit}
+img{display:block;max-width:100%}
+.skip{position:absolute;left:-999px;top:8px;background:var(--gold);color:#2A1A10;padding:8px 12px;border-radius:var(--r-btn);z-index:5}
+.skip:focus{left:8px}
+main{position:relative;z-index:2}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.wide{max-width:1120px;margin:0 auto;padding:0 16px}
+.screen{display:none}
+.screen.on{display:block;animation:in .5s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.anton{font-family:Anton,Impact,sans-serif;font-weight:400}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400}
+.mut{color:var(--mut)}
+.gold{color:var(--gold)}
+.gold-grad{background:linear-gradient(180deg,#FFF7CF 0%,#FCEA94 45%,#C9A227 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2,h3{text-wrap:balance}
+p{text-wrap:pretty}
+.ph-bold{font-size:1.15em;line-height:1}
+
+/* ---------- tombol ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;padding:14px 22px;border-radius:var(--r-btn);font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;transition:transform .2s var(--ease),box-shadow .2s var(--ease),background .2s}
+.btn:active{transform:scale(.98) translateY(1px)}
+.btn-main{background:linear-gradient(180deg,#D62B2B,#8E1313);color:#FFF8EC;box-shadow:0 8px 18px -10px rgba(60,6,4,.9),inset 0 1px 0 rgba(255,255,255,.2)}
+.btn-main:hover{box-shadow:0 12px 22px -10px rgba(60,6,4,.95),inset 0 1px 0 rgba(255,255,255,.2);transform:translateY(-1px)}
+.btn-main .charge{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,rgba(252,234,148,0),rgba(252,234,148,.5))}
+.btn-main > span,.btn-main > i{position:relative}
+.btn-main.go{animation:shake .32s linear 2}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.btn-gold{background:linear-gradient(180deg,#FFF3B8,#E3C152);color:#2A1A10;box-shadow:0 12px 30px -12px rgba(252,234,148,.5)}
+.btn-gold:hover{transform:translateY(-1px)}
+.btn-wa{background:#1B9E4B;color:#fff}
+.btn-wa:hover{background:#178A41}
+a.btn{text-decoration:none}
+.btn-ghost{color:var(--tx);border:1px solid var(--line2);background:rgba(255,255,255,.03);font-weight:600;font-size:15px;min-height:52px}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(252,234,148,.06)}
+.link{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--tx);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:5px;padding:10px 4px;transition:color .2s,text-decoration-color .2s}
+.link:hover{color:var(--gold);text-decoration-color:var(--gold)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100dvh;display:grid;align-content:center;padding:16px 0 28px;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:-1;overflow:hidden;
+  background:radial-gradient(ellipse 70% 50% at 70% 30%,rgba(196,34,34,.42),transparent 70%),
+             radial-gradient(ellipse 50% 40% at 15% 90%,rgba(121,16,16,.35),transparent 70%)}
+.hero-bg:after{content:"";position:absolute;inset:-20%;background:repeating-conic-gradient(from 0deg at 70% 30%,rgba(252,234,148,.06) 0 5deg,transparent 5deg 16deg);
+  mask-image:radial-gradient(circle at 70% 30%,#000 10%,transparent 60%);-webkit-mask-image:radial-gradient(circle at 70% 30%,#000 10%,transparent 60%)}
+@keyframes rot{to{transform:rotate(360deg)}}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:center}
+/* Foto Cellos (cellos-juara.jpg). Wajah ada di sekitar 42% horizontal, 25% vertikal. */
+.hero-art{position:relative;height:min(46dvh,380px);margin:0 -16px;overflow:hidden}
+.hero-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:42% 22%;animation:fotoMasuk 1.1s var(--ease) both;-webkit-mask-image:linear-gradient(#000 58%,transparent 97%);mask-image:linear-gradient(#000 58%,transparent 97%)}
+@keyframes fotoMasuk{from{opacity:0;transform:scale(1.08)}to{opacity:1;transform:none}}
+.hero-copy{position:relative;margin-top:-56px;text-align:center}
+.brand{display:inline-flex;align-items:baseline;gap:10px;animation:in .7s .1s var(--ease) both}
+.brand b{font-family:Anton;font-weight:400;font-size:30px;letter-spacing:.06em;line-height:1}
+.brand span{font-size:13px;font-weight:600;color:var(--mut)}
+.hero h1{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(46px,13.5vw,96px);line-height:.96;letter-spacing:.005em;margin:10px 0 0;animation:in .7s .18s var(--ease) both}
+.hero h1 .kuat{display:inline-block;color:var(--gold);transform-origin:50% 80%;animation:flex 2.4s 1s ease-in-out 2}
+@keyframes flex{0%,100%{transform:scale(1) rotate(0)}6%{transform:scale(1.12) rotate(-3deg)}12%{transform:scale(1) rotate(0)}}
+.hero .sub{max-width:34ch;margin:14px auto 0;color:var(--mut);font-size:15.5px;animation:in .7s .26s var(--ease) both}
+.hero .sub b{color:var(--tx);font-weight:600}
+/* subteks hero: 2 baris pendek, baris kedua = fakta singkat */
+.hero .sub [data-creator-line],.hero .sub .facts{display:block}
+.hero .sub .hey{display:block;font-family:Anton,Impact,sans-serif;font-weight:400;font-size:22px;line-height:1.1;letter-spacing:.03em;color:var(--tx);margin-bottom:4px}
+.hero .sub .who{display:block}
+.hero .sub .dare{display:block;margin-top:2px;color:var(--tx);font-weight:600}
+.hero .sub .nw{white-space:nowrap}
+.hero .sub .facts{margin-top:8px;color:var(--gold);font-weight:700;letter-spacing:.02em}
+.hero-cta{display:grid;justify-items:center;gap:4px;max-width:400px;margin:22px auto 0;animation:in .7s .34s var(--ease) both}
+@media (min-width:880px){
+  .hero{padding:24px 0}
+  .hero-grid{grid-template-columns:1.05fr .95fr;gap:24px}
+  .hero-copy{order:1;margin:0;text-align:left}
+  .hero-art{order:2;height:min(78dvh,600px);margin:0;border-radius:var(--r-panel)}
+  .hero-art img{object-position:42% 30%;-webkit-mask-image:linear-gradient(#000 70%,transparent 99%);mask-image:linear-gradient(#000 70%,transparent 99%)}
+  .hero .sub{margin-left:0}
+  .hero-cta{justify-items:start;margin-left:0}
+}
+
+/* ---------- section meter ---------- */
+.band{padding:56px 16px 8px}
+.meter-wrap{display:grid;gap:18px;max-width:640px;margin:0 auto}
+.meter-wrap h2{font-family:Anton;font-weight:400;font-size:clamp(30px,8vw,46px);line-height:1.05;text-transform:uppercase}
+.meter-num{font-family:Anton;font-size:clamp(64px,22vw,120px);line-height:.9}
+.meter-bar{height:18px;border-radius:999px;background:linear-gradient(var(--line),var(--line)) center/100% 2px no-repeat;overflow:hidden}
+.meter-fill{height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,var(--maroon),var(--red) 60%,var(--gold));transform-origin:left;transform:scaleX(.1);transition:transform .5s var(--ease);position:relative}
+.meter-fill:after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,rgba(255,255,255,.16) 0 8px,transparent 8px 16px)}
+.ticks{display:grid;grid-template-columns:repeat(4,1fr);font-size:13px;color:var(--mut2)}
+.ticks span{border-left:1px solid var(--line2);padding-left:6px}
+
+/* ---------- section deck ---------- */
+.deck-sec{padding:64px 16px 24px}
+.deck-sec h2{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:clamp(24px,6.4vw,32px);line-height:1.15;max-width:18ch}
+.deck-sec p{color:var(--mut);margin-top:8px;max-width:46ch}
+.deck{display:grid;grid-template-columns:repeat(4,1fr);gap:30px 10px;margin-top:22px;padding-bottom:18px}
+.mini{position:relative;aspect-ratio:3/4;border-radius:var(--r-btn);overflow:hidden;background:var(--bg2);transition:transform .4s var(--ease)}
+.mini:nth-child(even){transform:translateY(18px)}
+.mini img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 15%;filter:brightness(.5) saturate(.7) blur(3px);transform:scale(1.08);transition:filter .5s var(--ease)}
+.mini .q{position:absolute;inset:0;display:grid;place-items:center;font-family:Anton;font-size:38px;color:var(--gold);text-shadow:0 2px 14px rgba(0,0,0,.7)}
+.mini:hover img{filter:brightness(.62) saturate(.8) blur(1px)}
+.closing{padding:72px 16px 40px;text-align:center}
+.closing p{max-width:30ch;margin:0 auto 18px;font-size:18px;font-weight:600}
+.closing .btn{max-width:400px}
+
+/* dok CTA bawah (muncul saat CTA hero keluar layar) */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(18,10,8,.92) 30%);transform:translateY(110%);transition:transform .4s var(--ease)}
+.dock.on{transform:none}
+.dock .btn{max-width:528px;margin:0 auto;display:flex}
+
+/* ---------- tebak & tanya ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0 12px;gap:12px}
+.back{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--mut);min-height:44px;padding:0 12px 0 0;transition:color .2s}
+.back:hover{color:var(--tx)}
+.count{font-size:13px;font-weight:600;color:var(--mut);font-variant-numeric:tabular-nums}
+.count b{color:var(--gold);font-weight:700}
+.pbar{height:8px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}
+.pbar i{display:block;height:100%;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--maroon),var(--red),var(--gold));border-radius:999px;transition:transform .55s var(--ease)}
+.qh{font-size:clamp(23px,6.4vw,30px);font-weight:700;line-height:1.24;margin:28px 0 6px;letter-spacing:-.01em}
+.qsub{font-size:14px;color:var(--mut);margin-bottom:18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;width:100%;padding:16px;border-radius:var(--r-btn);border:1px solid var(--line);background:var(--panel);font-size:15.5px;font-weight:500;line-height:1.4;transition:border-color .2s,background .2s,transform .2s var(--ease);animation:in .45s var(--ease) both}
+.opt:nth-child(2){animation-delay:.05s}.opt:nth-child(3){animation-delay:.1s}.opt:nth-child(4){animation-delay:.15s}
+.opt:hover{border-color:var(--line2);transform:translateX(2px)}
+.opt .l{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:rgba(252,234,148,.09);color:var(--gold);font-family:Anton;font-size:16px}
+.opt[aria-pressed=true]{border-color:var(--gold);background:linear-gradient(180deg,rgba(196,34,34,.32),rgba(121,16,16,.32))}
+.opt[aria-pressed=true] .l{background:var(--gold);color:#2A1A10}
+.boost{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);font-family:Anton;font-size:46px;color:var(--gold);text-shadow:0 4px 30px rgba(196,34,34,.9);pointer-events:none;opacity:0;z-index:30}
+.boost.go{animation:boost .75s var(--ease)}
+@keyframes boost{0%{opacity:0;transform:translate(-50%,-20%) scale(.6)}30%{opacity:1;transform:translate(-50%,-60%) scale(1.08)}100%{opacity:0;transform:translate(-50%,-130%) scale(1)}}
+.guess{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.gcard{position:relative;text-align:left;border-radius:var(--r-panel);overflow:hidden;background:var(--bg2);aspect-ratio:4/5;outline:2px solid transparent;outline-offset:-2px;transition:outline-color .2s,transform .25s var(--ease)}
+.gcard:hover{transform:translateY(-2px)}
+.gcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 12%;transition:transform .5s var(--ease)}
+.gcard:hover img{transform:scale(1.04)}
+.gcard .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 38%,rgba(10,6,5,.94))}
+.gcard .tx{position:absolute;left:12px;right:12px;bottom:12px}
+.gcard .tx b{display:flex;align-items:center;gap:6px;font-family:Anton;font-weight:400;font-size:24px;line-height:1.05}
+.gcard .tx b i{display:none;color:var(--gold)}
+.gcard .tx small{display:block;font-size:13px;color:rgba(255,248,236,.8);line-height:1.35;margin-top:4px}
+.gcard[aria-pressed=true]{outline-color:var(--gold)}
+.gcard[aria-pressed=true] .tx b{color:var(--gold)}
+.gcard[aria-pressed=true] .tx b i{display:inline}
+
+/* ---------- hitung (kerangka kartu + ukuran tenaga) ---------- */
+.calc{padding:48px 0;text-align:center}
+.calc-card{position:relative;max-width:320px;margin:0 auto 28px;aspect-ratio:4/5;border-radius:var(--r-panel);background:linear-gradient(110deg,#1E1411 30%,#2E1B16 50%,#1E1411 70%);background-size:220% 100%;animation:shimmer 1.2s linear infinite;overflow:hidden}
+@keyframes shimmer{to{background-position:-120% 0}}
+.calc-card span{position:absolute;left:24px;right:24px;height:14px;border-radius:999px;background:rgba(255,255,255,.06)}
+.calc-num{font-family:Anton;font-size:56px;line-height:1;font-variant-numeric:tabular-nums}
+.calc p{font-weight:600;margin-top:8px;min-height:1.6em}
+
+/* ---------- hasil ---------- */
+.res-head{padding:22px 0 0;text-align:center}
+.res-head h2{font-size:15px;font-weight:600;color:var(--mut)}
+.flipzone{perspective:1400px;margin:14px auto 0;max-width:400px}
+.flip{position:relative;aspect-ratio:4/5;transition:transform 1s cubic-bezier(.3,1.35,.4,1);transform-style:preserve-3d}
+.flip.open{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:var(--r-panel);overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face.back{background:radial-gradient(circle at 50% 42%,#4A1010,#140907 72%);box-shadow:inset 0 0 0 1px var(--line2);display:grid;place-items:center;text-align:center;padding:24px}
+.face.back .seal{width:128px;height:128px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--gold);display:grid;place-items:center;margin:0 auto 20px;font-family:Anton;font-size:52px;color:var(--gold);animation:glow 1.5s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:inset 0 0 0 2px var(--gold),0 0 48px rgba(252,234,148,.4)}}
+.face.back b{display:block;font-size:21px;font-weight:700}
+.face.back small{display:block;color:var(--mut);margin-top:4px;font-size:14px}
+.face.front{transform:rotateY(180deg);box-shadow:inset 0 0 0 1px rgba(252,234,148,.5)}
+.face.front.tA{background:var(--A)}.face.front.tB{background:var(--B)}.face.front.tC{background:var(--C);color:#221B17}.face.front.tD{background:var(--D);color:#221B17}
+.face.front img{position:absolute;left:-12%;top:-4%;width:124%;height:auto}
+.face.front .shade{position:absolute;inset:0}
+.tA .shade{background:linear-gradient(180deg,transparent 40%,rgba(121,16,16,.92) 66%,#791010 80%)}
+.tB .shade{background:linear-gradient(180deg,transparent 40%,rgba(27,20,18,.92) 66%,#1B1412 80%)}
+.tC .shade{background:linear-gradient(180deg,transparent 40%,rgba(243,236,223,.92) 66%,#F3ECDF 80%)}
+.tD .shade{background:linear-gradient(180deg,transparent 40%,rgba(252,234,148,.92) 66%,#FCEA94 80%)}
+.face.front .fbot{position:absolute;left:18px;right:18px;bottom:20px;text-align:center}
+.fbot .k{font-size:13.5px;font-weight:600;opacity:.9}
+.fbot .n{font-family:Anton;font-size:clamp(54px,15vw,72px);line-height:.98;padding-bottom:2px}
+.tA .fbot .n,.tB .fbot .n{color:var(--gold)}
+.fbot .j{font-family:"Instrument Serif",serif;font-style:italic;font-size:25px;line-height:1.15;padding-bottom:2px}
+.tA .fbot .j,.tB .fbot .j,.tA .fbot .k,.tB .fbot .k{color:var(--gold)}
+.tC .fbot .j,.tD .fbot .j{color:var(--maroon)}
+.fbot .c{font-size:14px;margin-top:6px;line-height:1.4}
+.after{display:none}
+.after.on{display:block;animation:in .6s .2s var(--ease) both}
+body.kartu-tutup footer{display:none}
+body.kartu-tutup #s-hasil.on{min-height:100dvh;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center}
+body.kartu-tutup #s-hasil.on > *{width:100%}
+
+.score{margin-top:28px;text-align:center}
+.score .pct{font-family:Anton;font-size:clamp(88px,28vw,128px);line-height:.92;font-variant-numeric:tabular-nums}
+.score .of{font-size:16px;font-weight:600;margin-top:6px}
+.score .lv{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:7px 14px;border-radius:999px;background:var(--red);font-size:13px;font-weight:700}
+.resmi{font-size:15px;font-weight:600;color:var(--mut)}
+.title{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(46px,14vw,68px);line-height:1.02;margin-top:4px}
+.title span{display:block}
+.brag{font-size:16px;font-weight:600;margin-top:8px}
+.ladder{position:relative;display:grid;grid-template-columns:repeat(4,1fr);margin:24px auto 0;max-width:420px}
+.ladder:before,.ladder .prog{content:"";position:absolute;top:20px;left:12.5%;height:2px;background:var(--line2)}
+.ladder:before{right:12.5%}
+.ladder .prog{background:var(--gold);width:0;transition:width .9s .3s var(--ease)}
+.rung{position:relative;display:grid;justify-items:center;gap:6px}
+.rung span{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--bg2);box-shadow:inset 0 0 0 2px var(--line2);color:var(--mut2);font-size:18px;transition:background .3s,transform .4s var(--ease)}
+.rung small{font-size:13px;font-weight:600;color:var(--mut2)}
+.rung.done span{background:var(--gold);color:#2A1A10;box-shadow:none}
+.rung.done small{color:var(--tx)}
+.rung.now span{background:var(--red);color:#FFF8EC;box-shadow:0 0 0 6px rgba(196,34,34,.28);transform:scale(1.12)}
+.rung.now small{color:var(--gold)}
+.pctline{margin-top:22px;font-size:15px;font-weight:600}
+.pctline b{font-family:Anton;font-weight:400;font-size:40px;line-height:1;vertical-align:-6px;margin-right:4px;font-variant-numeric:tabular-nums}
+.next{margin:10px auto 0;max-width:34ch;font-size:14px;color:var(--mut)}
+.preview-wrap{margin:18px 0 0;text-align:center}
+.preview{width:min(250px,66%);aspect-ratio:9/16;margin:0 auto 10px;border-radius:var(--r-btn);background:var(--bg2);box-shadow:0 24px 50px -18px rgba(0,0,0,.85),0 0 0 1px var(--line2);object-fit:cover;transform:rotate(-2deg);transition:transform .4s var(--ease)}
+.preview:hover{transform:rotate(0) scale(1.02)}
+.duel{margin-top:18px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:16px;border-radius:var(--r-panel);box-shadow:inset 0 0 0 1px var(--line2);background:rgba(252,234,148,.05)}
+.duel .side{text-align:center}
+.duel .side b{display:block;font-family:Anton;font-weight:400;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.duel .side small{font-size:13px;color:var(--mut)}
+.duel .vs{font-family:Anton;font-size:18px;color:var(--mut2)}
+.duel-v{grid-column:1/-1;text-align:center;font-weight:600;font-size:15px}
+.verdict{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:14px 16px;border-radius:var(--r-btn);background:rgba(252,234,148,.06);font-size:14.5px}
+.verdict i{color:var(--gold);margin-top:3px}
+
+.share{margin-top:26px;padding:22px 18px;border-radius:var(--r-panel);background:linear-gradient(160deg,#3A0E0E,#1B0C0A);box-shadow:inset 0 0 0 1px var(--line2)}
+#preview{max-width:230px;margin-inline:auto}
+.share h3{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:clamp(24px,6.6vw,30px);line-height:1.15}
+.share h3 em{font-style:normal;color:var(--gold)}
+.share .g{display:grid;gap:10px;margin-top:16px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:grid;gap:6px;margin-top:16px}
+.field label{font-size:14px;font-weight:600}
+.field input{height:50px;padding:0 14px;border-radius:var(--r-btn);border:1px solid rgba(252,234,148,.35);background:rgba(10,6,5,.55);color:var(--tx);font-size:16px}
+.field input::placeholder{color:rgba(251,243,230,.55)}
+.field input:focus{outline:2px solid var(--gold);outline-offset:1px}
+.note{font-size:13px;color:var(--mut)}
+.note.err{color:#FFB4A8}
+
+.block{margin-top:48px}
+.block h3{font-size:20px;font-weight:700;line-height:1.25;margin-bottom:12px}
+.prose .quote{font-family:"Instrument Serif",serif;font-style:italic;font-size:clamp(28px,8vw,36px);line-height:1.15;color:var(--gold);padding-bottom:4px}
+.prose p{font-size:15.5px;max-width:62ch}
+.prose p+p{margin-top:12px}
+.comp{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.comp div{display:grid;gap:4px}
+.comp b{font-family:Anton;font-weight:400;font-size:34px;line-height:1;font-variant-numeric:tabular-nums;color:var(--mut)}
+.comp small{font-size:13px;font-weight:600;color:var(--mut);overflow-wrap:anywhere}
+.comp i{display:block;height:4px;border-radius:999px;background:var(--mut2);width:0;transition:width 1s .2s var(--ease)}
+.comp .u b{color:var(--gold)}
+.comp .u small{color:var(--tx)}
+.comp .u i{background:linear-gradient(90deg,var(--red),var(--gold))}
+.str{list-style:none;display:grid;gap:16px;counter-reset:s}
+.str li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;font-size:15.5px;counter-increment:s}
+.str li:before{content:counter(s);font-family:Anton;font-size:34px;line-height:1;color:var(--gold)}
+.split{display:grid;grid-template-columns:1fr;gap:18px}
+.split div{padding-left:14px;border-left:2px solid var(--maroon)}
+.split b{display:block;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:2px}
+.split p{font-size:15px}
+@media (min-width:520px){.split{grid-template-columns:1fr 1fr}}
+.said{margin-top:18px;font-size:15px}
+.said .serif{font-size:22px;color:var(--gold)}
+.klop{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kc{position:relative;border-radius:var(--r-panel);overflow:hidden;aspect-ratio:4/5;background:var(--bg2)}
+.kc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 12%}
+.kc .ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(10,6,5,.95) 78%)}
+.kc .tx{position:absolute;left:12px;right:12px;bottom:12px}
+.kc b{display:block;font-family:Anton;font-weight:400;font-size:22px;line-height:1.05}
+.kc small{display:block;font-size:13px;line-height:1.35;color:rgba(255,248,236,.85);margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{min-height:44px;padding:10px 16px;border-radius:999px;box-shadow:inset 0 0 0 1px var(--line2);font-size:14px;font-weight:600;transition:background .2s,color .2s}
+.chip:hover{background:rgba(252,234,148,.08)}
+.chip[aria-pressed=true]{background:var(--gold);color:#2A1A10;box-shadow:none}
+.kombi{margin-top:14px;padding:16px;border-radius:var(--r-btn);background:rgba(252,234,148,.07)}
+.kombi b{font-family:Anton;font-weight:400;font-size:26px;color:var(--gold);display:block;line-height:1.1}
+.invite{margin-bottom:14px;padding:14px 16px;border-radius:var(--r-btn);background:var(--gold);color:#2A1A10;font-size:14.5px;font-weight:600}
+.care{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+.care i{font-size:26px;color:var(--gold)}
+.again{display:flex;justify-content:center;margin-top:40px}
+footer{padding:28px 0 56px;text-align:center;font-size:13px;color:var(--mut2);max-width:46ch;margin:0 auto}
+
+/* logo placeholder: ganti CONFIG.logoUrl di script untuk memakai file logo */
+.logo{display:inline-grid;place-items:center;height:34px;padding:0 10px;border:2px solid var(--gold);border-radius:12px;font-family:Anton,Impact,sans-serif;font-size:20px;line-height:1;letter-spacing:.06em;color:var(--gold)}
+.logo img{height:26px;width:auto}
+.brand{align-items:center}
+/* contoh kartu di landing */
+.sample{display:grid;gap:26px;padding:64px 16px 8px;align-items:center}
+.sample h2{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:clamp(24px,6.4vw,32px);line-height:1.15}
+.sample ul{list-style:none;display:grid;gap:14px;margin-top:18px}
+.sample li{display:grid;grid-template-columns:40px 1fr;gap:12px;align-items:start;font-size:15.5px}
+.sample li i{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(252,234,148,.09);color:var(--gold);font-size:20px}
+.sample li b{display:block;font-weight:700}
+.sample li span{color:var(--mut);font-size:14px}
+.sample figure{text-align:center}
+.sample img{width:min(270px,72%);aspect-ratio:9/16;margin:0 auto;border-radius:var(--r-btn);background:var(--bg2);box-shadow:0 30px 60px -20px rgba(0,0,0,.9),0 0 0 1px var(--line2);transform:rotate(3deg)}
+.sample figcaption{font-size:13px;color:var(--mut);margin-top:14px}
+@media (min-width:880px){.sample{grid-template-columns:1fr 1fr;gap:48px}}
+/* insight & tantangan 7 hari */
+.ins{list-style:none;display:grid;gap:20px}
+.ins li{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:4px 0}
+.ins{counter-reset:ins}
+.ins li{grid-template-columns:34px 1fr !important}
+.ins li::before{counter-increment:ins;content:counter(ins);font-family:Anton;font-size:44px;line-height:.9;color:var(--gold)}
+.ins li > i{display:none}
+.ins b{display:block;font-size:16px;font-weight:700;line-height:1.3}
+.ins p{font-size:14.5px;color:var(--mut);margin-top:4px}
+.chal{padding:22px 18px;border-radius:var(--r-panel);background:linear-gradient(160deg,rgba(252,234,148,.1),rgba(252,234,148,.02));box-shadow:inset 0 0 0 1px var(--line2)}
+.chal .tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--gold)}
+.chal h3{font-family:Anton;font-weight:400;font-size:clamp(28px,8vw,36px);line-height:1.06;text-transform:uppercase;margin:6px 0 8px}
+.chal p{font-size:15px}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:16px}
+.day{display:grid;justify-items:center;gap:4px;padding:10px 0;border-radius:12px;box-shadow:inset 0 0 0 1px var(--line2);font-size:11px;font-weight:600;color:var(--mut);transition:background .2s,color .2s,transform .2s var(--ease)}
+.day b{font-family:Anton;font-weight:400;font-size:20px;line-height:1;color:var(--tx)}
+.day:active{transform:scale(.95)}
+.day[aria-pressed=true]{background:var(--gold);color:#2A1A10;box-shadow:none}
+.day[aria-pressed=true] b{color:#2A1A10}
+/* Kenalan sama SMGT! */
+.logo:has(img){border:0;padding:0;height:auto}
+.logo img{height:34px;width:auto}
+.smgt{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+.smgt h3.h-kalem{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:clamp(20px,5.6vw,24px);line-height:1.2}
+.smgt h3{font-family:Anton;font-weight:400;font-size:clamp(30px,8.5vw,40px);line-height:1.05;text-transform:uppercase;margin:14px 0 8px}
+.smgt .lead2{font-size:15.5px;color:var(--mut);max-width:58ch}
+.prod{margin:20px -16px 0;position:relative}
+.prod img{width:100%;aspect-ratio:16/10;object-position:50% 72%;object-fit:cover;background:var(--bg2)}
+@media (min-width:560px){.prod{margin:20px 0 0}.prod img{border-radius:var(--r-panel)}}
+.letters{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px}
+.letters div{display:inline-flex;align-items:baseline;gap:6px}
+.letters b{font-family:Anton;font-weight:400;font-size:22px;line-height:1;color:var(--gold)}
+.letters span{font-size:14px;font-weight:600;color:var(--mut);line-height:1.25}
+.honest{display:grid;gap:16px;margin-top:22px}
+.honest b{display:block;font-size:15px;margin-bottom:6px}
+.honest ul{list-style:none;display:grid;gap:6px}
+.honest li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:14.5px;color:var(--mut)}
+.honest li i{margin-top:3px}
+.honest .ya i{color:#7BD99A}
+.honest .no i{color:var(--mut2)}
+@media (min-width:520px){.honest{grid-template-columns:1fr 1fr}}
+.packs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+.pack{position:relative;display:grid;gap:4px;align-content:start;padding:16px 14px;border-radius:var(--r-panel);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line);color:var(--tx);text-decoration:none;transition:box-shadow .2s,transform .2s var(--ease)}
+.pack:hover{box-shadow:inset 0 0 0 1px var(--gold);transform:translateY(-2px)}
+.pack.hemat{box-shadow:inset 0 0 0 1px var(--line2);background:linear-gradient(160deg,#3A0E0E,#1B0C0A)}
+.pack small{font-size:13px;font-weight:700;color:var(--gold)}
+.pack b{font-family:Anton;font-weight:400;font-size:24px;line-height:1.05}
+.pack span{font-size:13px;color:var(--mut)}
+.pack .harga{font-size:17px;font-weight:700;color:var(--tx);margin-top:6px}
+.pack s{font-size:12.5px;color:var(--mut2)}
+.buy{display:grid;gap:10px;margin-top:14px}
+.buy a{text-decoration:none}
+.buy .row2 .btn{min-height:50px;font-size:15px}
+.smgt .fine{font-size:13px;color:var(--mut2);margin-top:14px}
+/* Challenge 7 Hari (lead magnet) */
+.chal-intro{font-size:15.5px}
+.chal-intro b{color:var(--gold)}
+.perks{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.perks span{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(252,234,148,.08);font-size:13px;font-weight:600}
+.perks i{color:var(--gold)}
+.mis{list-style:none;display:grid;gap:8px;margin-top:18px}
+.mis li{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-radius:var(--r-btn)}
+.mis .d{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:rgba(252,234,148,.09);color:var(--gold);font-size:20px}
+.mis b{display:block;font-size:15px;line-height:1.3}
+.mis small{display:block;font-size:13px;color:var(--mut);line-height:1.4;margin-top:2px}
+.mis .fokus{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:var(--red);font-size:12px;font-weight:700;color:#FFF8EC;vertical-align:2px}
+.mis li.f{box-shadow:inset 0 0 0 1px var(--line2);background:rgba(196,34,34,.14);padding:12px;margin:0 -12px}
+.tick{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--line2);color:transparent;font-size:18px;transition:background .2s,color .2s}
+.tick[aria-pressed=true]{background:var(--gold);color:#2A1A10;box-shadow:none}
+.lead{margin-top:22px;padding-top:20px;border-top:1px solid var(--line2)}
+.lead h4{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:22px;line-height:1.2}
+.lead > p{font-size:14px;color:var(--mut);margin-top:4px}
+.lead .field{margin-top:12px}
+.consent{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;margin-top:14px;padding:8px 0;font-size:13.5px;color:var(--mut);cursor:pointer}
+.consent input{width:24px;height:24px;margin:0;accent-color:#C42222}
+.lead .btn{margin-top:14px}
+.lead .err{color:#FFB4A8;font-size:13px;margin-top:8px}
+.lead-ok{display:grid;gap:10px;text-align:center}
+.lead-ok i.big{font-size:44px;color:var(--gold)}
+.lead-ok b{font-size:18px}
+.lead-ok p{font-size:14px;color:var(--mut)}
+/* Manfaat SMGT */
+.benefit{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;margin-top:16px}
+.benefit div{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-content:start}
+.benefit i{grid-row:span 2;font-size:20px;color:var(--gold);margin-top:1px}
+.benefit b{font-size:14px;line-height:1.3}
+.benefit span{font-size:12.5px;color:var(--mut)}
+.notobat{margin-top:16px;padding:12px 14px;border-radius:var(--r-btn);background:rgba(252,234,148,.06);font-size:13.5px;color:var(--mut)}
+.notobat b{color:var(--tx)}
+/* Angle hadiah untuk pasangan (khusus pengguna wanita) */
+.gift{display:grid;grid-template-columns:48px 1fr;gap:14px;margin-top:18px;padding:18px 16px;border-radius:var(--r-panel);background:linear-gradient(160deg,#3A0E0E,#1B0C0A);box-shadow:inset 0 0 0 1px var(--line2)}
+.gift > i{display:grid;place-items:center;width:48px;height:48px;border-radius:12px;background:var(--gold);color:#2A1A10;font-size:26px}
+.gift b{display:block;font-family:Anton;font-weight:400;font-size:24px;line-height:1.1;text-transform:uppercase}
+.gift p{font-size:14.5px;color:var(--mut);margin-top:6px}
+.gift .duo{color:var(--gold);font-weight:700}
+.gift .btn{grid-column:1/-1;text-decoration:none}
+/* share ringkas di bawah skor */
+.qshare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+.qshare .btn{min-height:52px;padding:12px 10px;font-size:15px;gap:8px}
+/* detail tokoh bisa dibuka-tutup */
+.more{margin-top:44px;border-radius:var(--r-panel);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line)}
+.more > summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:64px;padding:16px 18px;cursor:pointer;font-size:17px;font-weight:700}
+.more > summary::-webkit-details-marker{display:none}
+.more > summary small{display:block;font-size:13px;font-weight:500;color:var(--mut);margin-top:2px}
+.more > summary i{flex:none;font-size:22px;color:var(--gold);transition:transform .3s var(--ease)}
+.more[open] > summary i{transform:rotate(180deg)}
+.more-body{padding:0 18px 22px}
+.more-body .block:first-child{margin-top:8px}
+.more-body .block{margin-top:36px}
+/* misi 7 hari: 3 dulu */
+.mis li.lain{display:none}
+.mis.semua li.lain{display:grid}
+.mis-toggle{margin-top:8px}
+/* lembar bawah: isi nama sebelum bagikan */
+.sheet{margin:auto auto 0;width:100%;max-width:560px;max-height:none;border:0;padding:22px 16px calc(22px + env(safe-area-inset-bottom));border-radius:var(--r-panel) var(--r-panel) 0 0;background:var(--bg2);color:var(--tx);box-shadow:0 -1px 0 var(--line2)}
+.sheet[open]{animation:naik .35s var(--ease)}
+@keyframes naik{from{transform:translateY(100%)}to{transform:none}}
+.sheet::backdrop{background:rgba(10,6,5,.72)}
+.sheet h3{font-family:Anton;font-weight:400;font-size:28px;line-height:1.1;text-transform:uppercase}
+.sheet .sub2{font-size:14.5px;color:var(--mut);margin-top:6px}
+.sheet .sub2 b{color:var(--gold)}
+.sheet .btn{margin-top:14px}
+.sheet .nanti{display:flex;justify-content:center;margin-top:6px}
+/* batas usia 21+ */
+.disclaimer{margin-top:10px;font-size:13px;color:var(--mut);text-align:center}
+.hero-meta{display:flex;align-items:center;margin-top:12px;font-size:14px;font-weight:600;color:var(--tx)}
+.hero-meta span{display:inline-flex;align-items:center;gap:6px;padding:0 14px}
+.hero-meta span + span{border-left:1px solid var(--line2)}
+.hero-meta span:first-child{padding-left:0}.hero-meta span:last-child{padding-right:0}
+.hero-meta i{color:var(--gold);font-size:16px}
+.hero-age{margin-top:6px;font-size:12px}
+.age{display:inline-grid;place-items:center;height:26px;padding:0 9px;border-radius:999px;box-shadow:inset 0 0 0 1.5px var(--line2);font-size:13px;font-weight:800;line-height:1;color:var(--tx)}
+.agecheck{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:center;margin-top:18px;padding:14px 16px;border-radius:var(--r-btn);background:rgba(252,234,148,.06);box-shadow:inset 0 0 0 1px var(--line);font-size:14px;cursor:pointer;transition:box-shadow .2s}
+.agecheck input{width:24px;height:24px;margin:0;accent-color:#C42222}
+.agecheck b{color:var(--gold)}
+.agecheck.salah{box-shadow:inset 0 0 0 1.5px #FFB4A8;animation:shake .32s linear 2}
+.age-err{font-size:13px;color:#FFB4A8;margin-top:8px;min-height:1.2em}
+#genderGrid.kunci .gcard{opacity:.45;filter:grayscale(.5)}
+/* Cellos ikut main: pembanding lucu di hasil */
+.vs-cellos{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;margin:18px auto 0;max-width:420px;padding:12px 14px;border-radius:var(--r-btn);background:rgba(252,234,148,.06);box-shadow:inset 0 0 0 1px var(--line);text-align:left}
+.vs-cellos .ava{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 40% 35%,#E8C85A,#8E1313);color:#FFF8EC;font-size:22px}
+.vs-cellos .ava img{width:100%;height:100%;object-fit:cover;object-position:40% 18%;transform:scale(1.9);transform-origin:40% 22%}
+.vs-cellos p{font-size:14.5px;line-height:1.45}
+.vs-cellos b{color:var(--gold)}
+.tips-more{margin-top:14px}
+.tips-more summary{display:inline-flex;align-items:center;gap:8px;cursor:pointer;list-style:none;font-weight:700;color:var(--gold);min-height:44px}
+.tips-more summary::-webkit-details-marker{display:none}
+.tips-more summary i{transition:transform .25s var(--ease)}
+.tips-more[open] summary i{transform:rotate(180deg)}
+.tips-intro{font-size:15px;color:var(--mut);margin-top:8px}
+.prose .vs-line{margin-top:14px;padding-left:14px;border-left:2px solid var(--gold);font-size:15px}
+.prose .vs-line b{color:var(--gold)}
+.cellos-say{margin:6px 0 0;max-width:420px;padding-left:14px;border-left:2px solid var(--gold);font-size:15px;line-height:1.5}
+.cellos-say b{color:var(--gold)}
+.cellos-say .shout{display:block;margin-top:4px;font-family:Anton,Impact,sans-serif;font-size:19px;letter-spacing:.03em;color:var(--tx)}
+.smgt-say{margin-top:16px}
+.shout-in{font-family:Anton,Impact,sans-serif;font-size:19px;letter-spacing:.03em;color:var(--tx);white-space:nowrap}
+.story{margin:28px 0 26px}
+.story h4{font-size:18px;font-weight:700;line-height:1.3}
+.story-buy{margin-top:18px;text-decoration:none}
+.story p{font-size:15.5px;color:var(--mut);margin-top:10px;max-width:60ch}
+.story .story-for{color:var(--tx);font-weight:700;margin-top:18px}
+.mau{list-style:none;margin-top:8px;display:grid;gap:2px}
+.mau li{font-family:Anton,Impact,sans-serif;font-size:clamp(22px,6vw,28px);line-height:1.15;text-transform:uppercase}
+[hidden]{display:none!important}
+input[type=checkbox]{accent-color:var(--gold);width:20px;height:20px}
+/* layar kenalan: umur */
+.agefield{margin-top:18px;max-width:220px}
+.agefield input{font-size:20px;font-weight:700;letter-spacing:.02em}
+.agefield.salah input{border-color:#FFB4A8;animation:shake .32s linear 2}
+.ikut{margin-top:16px;font-size:14px;font-weight:600;color:var(--mut)}
+#genderGrid{margin-top:8px}
+/* Tips dari Cellos */
+.tips{margin-top:48px}
+.tips-by{display:flex;align-items:center;gap:10px}
+.tips-by .ava{flex:none;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#E8C85A,#8E1313);color:#FFF8EC;font-size:24px;overflow:hidden}
+.tips-by .ava img{width:100%;height:100%;object-fit:cover;object-position:40% 18%;transform:scale(1.9);transform-origin:40% 22%}
+.tips-by b{display:block;font-size:16px}
+.tips-by span{font-size:13px;color:var(--mut)}
+.tips h3{font-family:Poppins,sans-serif;font-weight:800;letter-spacing:-.01em;text-transform:none;font-size:clamp(24px,6.6vw,30px);line-height:1.15;margin:16px 0 0}
+.rail{display:grid;grid-auto-flow:column;grid-auto-columns:84%;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:18px -16px 0;padding:4px 16px 10px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.tip{scroll-snap-align:start;display:grid;align-content:start;gap:8px;padding:20px 18px;border-radius:var(--r-panel);background:var(--panel);box-shadow:inset 0 0 0 1px var(--line)}
+.tip .no{font-family:Anton;font-size:40px;line-height:1;color:var(--gold)}
+.tip b{font-size:18px;line-height:1.25}
+.tip p{font-size:14.5px;color:var(--mut)}
+.tip.pas{background:linear-gradient(160deg,#3A0E0E,#1B0C0A);box-shadow:inset 0 0 0 1px var(--line2)}
+.tip .pas-tag{justify-self:start;display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--red);font-size:12px;font-weight:700}
+.tip-sign{font-family:"Instrument Serif",serif;font-style:italic;font-size:18px;color:var(--gold)}
+/* panel debug tracking (?debug=1) */
+.dbg{position:fixed;left:8px;bottom:8px;z-index:50;max-width:300px;max-height:40vh;overflow:auto;padding:8px 10px;border-radius:10px;background:rgba(0,0,0,.85);color:#9FE8B0;font:11px/1.5 ui-monospace,monospace}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(140px);width:min(420px,calc(100% - 32px));padding:14px 16px;border-radius:var(--r-btn);background:#FBF3E6;color:#1B1412;font-size:14px;font-weight:600;box-shadow:0 14px 40px -8px rgba(0,0,0,.6);transition:transform .4s var(--ease);z-index:40}
+.toast.on{transform:translateX(-50%) translateY(0)}
+.hide{display:none!important}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#app">Langsung ke kuis</a>
+<div class="boost" id="boost" aria-hidden="true">+TENAGA</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<dialog class="sheet" id="namaDlg" aria-labelledby="namaDlgJudul">
+  <form id="namaDlgForm" novalidate>
+    <h3 id="namaDlgJudul">Tulis nama lu di kartu</h3>
+    <p class="sub2" id="namaDlgSub">Biar circle lu tahu siapa yang pegang gelar ini.</p>
+    <div class="field">
+      <label for="namaDlgInput">Nama panggilan</label>
+      <input id="namaDlgInput" maxlength="14" autocomplete="nickname" placeholder="Contoh: Dimas" required>
+      <p class="note err" id="namaDlgErr" role="alert"></p>
+    </div>
+    <button class="btn btn-gold" type="submit" id="namaDlgOk"><i class="ph-bold ph-share-fat"></i><span id="namaDlgOkTxt">Bagikan Hasil</span></button>
+    <div class="nanti"><button class="link" type="button" id="namaDlgBatal">Nanti dulu</button></div>
+  </form>
+</dialog>
+
+<main id="app">
+
+<!-- ================= INTRO ================= -->
+<section class="screen on" id="s-intro">
+  <header class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="wide hero-grid">
+      <div class="hero-art"><img id="heroImg" src="cellos-juara.jpg" width="549" height="364" alt="Cellos, Botak Terkuat di Bumi, mengangkat sabuk juara di atas ring" fetchpriority="high"></div>
+      <div class="hero-copy">
+        <p class="brand"><span class="logo" data-logo>SMGT</span><b class="gold" style="font-size:26px">CHALLENGE</b></p>
+        <h1>Seberapa <span class="kuat">tangguh</span> lu?!</h1>
+        <p class="sub" id="heroSub"><span data-creator-line><b class="hey">WADDUP BROBRIES!</b><span class="who">Gue Cellos, <span class="nw">Botak Terkuat di Bumi.</span></span><span class="dare">Skor gue udah keluar. Lu bisa nyamain?</span></span></p>
+        <div class="hero-cta" id="heroCta">
+          <button class="btn btn-main" id="btnPria" type="button"><i class="charge" id="charge"></i><i class="ph-bold ph-lightning"></i><span>Terima Tantangan</span></button>
+          <div class="hero-meta"><span><i class="ph-bold ph-list-numbers"></i>10 soal</span><span><i class="ph-bold ph-timer"></i>2 menit</span><span><i class="ph-bold ph-gift"></i>Gratis</span></div>
+          <p class="disclaimer hero-age">Khusus usia 21 tahun ke atas.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="band wide" aria-labelledby="h-meter">
+    <div class="meter-wrap">
+      <h2 id="h-meter">Skor tangguh lu sekarang</h2>
+      <div class="meter-num gold" id="meterTxt" aria-live="off">??</div>
+      <div class="meter-bar" aria-hidden="true"><div class="meter-fill" id="meterFill"></div></div>
+      <div class="ticks" aria-hidden="true"><span>Kota</span><span>Indonesia</span><span>Asia</span><span>Bumi</span></div>
+      <p class="cellos-say" data-creator-line><b>Cellos:</b> Gue udah tes duluan.<br>Hasilnya? Jangan ditanya.<br>Gue Botak Terkuat di Bumi, BOSSS.<span class="shout">GILIRAN LU, BROBRIES!</span></p>
+    </div>
+  </section>
+
+  <section class="sample wide" aria-labelledby="h-sample">
+    <div>
+      <h2 id="h-sample">Yang lu bawa pulang</h2>
+      <ul>
+        <li><i class="ph-bold ph-gauge"></i><div><b>Skor challenge, maksimal 100</b><span>Plus gelar. Dari Terkuat se-Kota sampai Terkuat di Bumi.</span></div></li>
+        <li><i class="ph-bold ph-mask-happy"></i><div><b>Tokoh di balik tenaga lu</b><span>Satu dari 8 tokoh wayang. Siapa tahu lu Gatotkaca. Siapa tahu bukan.</span></div></li>
+        <li><i class="ph-bold ph-lightbulb"></i><div><b>3 catatan buat lu</b><span>Soal gaya tenaga, jam tidur, dan seberapa sering lu gerak.</span></div></li>
+        <li><i class="ph-bold ph-calendar-check"></i><div><b>Challenge 7 Hari gratis</b><span>Platform eksklusif bareng Cellos. Misi harian, check-in, hadiah spesial buat yang finish.</span></div></li>
+      </ul>
+    </div>
+    <figure><img id="sampleImg" alt="Contoh kartu hasil SMGT Challenge: Bima, Pria Terkuat se-Asia"><figcaption>Contoh kartu. Kartu lu dibikin dari jawaban lu sendiri.</figcaption></figure>
+  </section>
+
+  <section class="deck-sec wide" aria-labelledby="h-deck">
+    <h2 id="h-deck">8 kartu tokoh. Satu punya lu.</h2>
+    <p>4 Ksatria buat pria, 4 Srikandi buat wanita. Jawaban lu yang nentuin kartu mana yang kebuka.</p>
+    <div class="deck" id="teaserDeck"></div>
+  </section>
+
+  <section class="closing wide">
+    <p>Tes karakter lu. Tantang circle lu.</p>
+    <button class="btn btn-main" type="button" data-start><i class="ph-bold ph-lightning"></i><span>Terima Tantangan</span></button>
+    <p class="disclaimer">Khusus usia 21 tahun ke atas.</p>
+  </section>
+</section>
+
+<!-- ================= PILIH PRIA / WANITA ================= -->
+<section class="screen wrap" id="s-gender" aria-labelledby="h-gender">
+  <div class="top">
+    <button class="back" type="button" data-go="intro"><i class="ph-bold ph-arrow-left"></i>Kembali</button>
+    <span class="count">Sebelum mulai</span>
+  </div>
+  <h2 class="qh" id="h-gender" style="margin-top:12px">Kenalan dulu, ya.</h2>
+  <div class="field agefield" id="ageWrap">
+    <label for="umur">Umur (tahun)</label>
+    <input id="umur" type="number" inputmode="numeric" min="21" max="99" placeholder="Contoh: 35" autocomplete="off" aria-describedby="ageErr">
+    <p class="age-err" id="ageErr" role="alert"></p>
+  </div>
+  <p class="ikut" id="ikutLbl">Ikut sebagai</p>
+  <div class="guess kunci" id="genderGrid">
+    <button type="button" class="gcard" data-g="pria" aria-pressed="false" aria-disabled="true" aria-describedby="ageWrap">
+      <img data-potret="gatotkaca" alt=""><span class="ov"></span>
+      <span class="tx"><b>PRIA<i class="ph-bold ph-check-circle"></i></b><small>Deretan Ksatria. Gelar puncak: Pria Terkuat di Bumi.</small></span></button>
+    <button type="button" class="gcard" data-g="wanita" aria-pressed="false" aria-disabled="true" aria-describedby="ageWrap">
+      <img data-potret="srikandi" alt=""><span class="ov"></span>
+      <span class="tx"><b>WANITA<i class="ph-bold ph-check-circle"></i></b><small>Deretan Srikandi. Gelar puncak: Wanita Terkuat di Bumi.</small></span></button>
+  </div>
+</section>
+
+<!-- ================= TEBAK ================= -->
+<section class="screen wrap" id="s-tebak" aria-labelledby="h-tebak">
+  <div class="top">
+    <button class="back" type="button" data-go="gender"><i class="ph-bold ph-arrow-left"></i>Kembali</button>
+    <span class="count" id="pillGroup">Ksatria</span>
+  </div>
+  <h2 class="qh" id="h-tebak" style="margin-top:12px">Tebak dulu. Lu yang mana?</h2>
+  <p class="qsub">Tebakan tepat dapet lencana "Kenal Diri Sendiri". Gue sih langsung tahu gue yang mana.</p>
+  <div class="guess" id="guessGrid"></div>
+  <div style="margin-top:20px"><button class="btn btn-main" type="button" id="btnMulai"><span id="mulaiLbl">Skip, langsung mulai</span><i class="ph-bold ph-arrow-right"></i></button></div>
+</section>
+
+<!-- ================= TANYA ================= -->
+<section class="screen wrap" id="s-tanya" aria-labelledby="qh">
+  <div class="top">
+    <button class="back" type="button" id="btnBack"><i class="ph-bold ph-arrow-left"></i>Kembali</button>
+    <span class="count"><b id="qNo">1</b> dari 10</span>
+  </div>
+  <div class="pbar" aria-hidden="true"><i id="pFill"></i></div>
+  <h2 class="qh" id="qh" tabindex="-1"></h2>
+  <p class="qsub" id="qsub">Jawab yang beneran lu lakuin. Gue jawab semua ini sambil merem.</p>
+  <div class="opts" id="opts"></div>
+</section>
+
+<!-- ================= HITUNG ================= -->
+<section class="screen wrap" id="s-hitung" aria-live="polite">
+  <div class="calc">
+    <div class="calc-card" aria-hidden="true"><span style="bottom:96px;left:60px;right:60px;height:40px"></span><span style="bottom:60px"></span><span style="bottom:36px;left:70px;right:70px"></span></div>
+    <div class="calc-num gold" id="ringTxt">0%</div>
+    <p id="calcTxt">Ngukur tenaga</p>
+  </div>
+</section>
+
+<!-- ================= HASIL ================= -->
+<section class="screen wrap" id="s-hasil" aria-labelledby="h-hasil">
+  <div class="res-head"><h2 id="h-hasil">Kartu tokoh lu udah siap</h2></div>
+
+  <div class="flipzone">
+    <div class="flip" id="flip">
+      <button class="face back" type="button" id="btnFlip" aria-label="Buka kartu tokoh lu">
+        <div><div class="seal">?</div><b>Tap buat buka kartu lu</b><small>Siap lihat siapa lu sebenernya?</small></div>
+      </button>
+      <div class="face front" id="front" aria-hidden="true">
+        <img id="fImg" alt="">
+        <div class="shade"></div>
+        <div class="fbot">
+          <div class="k" id="fKamu">Lu adalah</div>
+          <div class="n" id="fNama"></div>
+          <div class="j" id="fJul"></div>
+          <div class="c" id="fKartu"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="after" id="after">
+    <div class="score">
+      <p class="resmi" id="resmiTxt">Lu resmi jadi</p>
+      <h3 class="title" id="lvTitle"><span id="lvA"></span><span class="gold-grad" id="lvB"></span></h3>
+      <p class="brag" id="lvBrag"></p>
+      <div class="vs-cellos" id="vsCellos"><span class="ava" id="vsAva"><i class="ph-bold ph-barbell"></i></span><p><b>Cellos:</b> <span id="vsTxt"></span></p></div>
+      <div class="ladder" id="ladder" role="img"></div>
+      <p class="pctline"><b class="gold" id="pct">0</b><b class="gold" style="font-size:24px;vertical-align:-1px">/100</b> Skor SMGT Challenge</p>
+      <p class="next" id="lvNext"></p>
+    </div>
+    <div class="qshare">
+      <button class="btn btn-gold" type="button" id="qsShare"><i class="ph-bold ph-share-fat"></i>Bagikan Hasil</button>
+      <button class="btn btn-wa" type="button" id="qsWa"><i class="ph-bold ph-whatsapp-logo"></i>Tantang Teman</button>
+    </div>
+    <div id="duelBox"></div>
+    <div id="verdictBox"></div>
+
+    <section class="block">
+      <h3>3 catatan buat lu</h3>
+      <ol class="ins" id="insights"></ol>
+      <p class="note" style="margin-top:12px">Skor paling banyak ditentukan jam tidur dan seberapa rutin lu gerak, plus seberapa konsisten gaya tenaga lu.</p>
+    </section>
+
+    <section class="block chal" id="secChal" aria-labelledby="chalTitle">
+      <span class="tag"><i class="ph-bold ph-calendar-check"></i>Gratis, bareng <span data-creator>Cellos</span></span>
+      <h3 id="chalTitle">Challenge 7 Hari</h3>
+      <p class="chal-intro" id="chalIntro"></p>
+      <div class="perks">
+        <span><i class="ph-bold ph-lock-key-open"></i>Akses platform eksklusif</span>
+        <span><i class="ph-bold ph-video-camera"></i>Video misi tiap hari</span>
+        <span><i class="ph-bold ph-gift"></i>Hadiah Spesial buat finisher</span>
+      </div>
+      <ol class="mis" id="mis"></ol>
+      <button class="link mis-toggle" type="button" id="misToggle"><i class="ph-bold ph-list-checks"></i><span>Lihat semua 7 misi</span></button>
+      <p class="note" id="chalNote" style="margin-top:10px"></p>
+
+      <div class="lead" id="lead">
+        <form id="leadForm" novalidate>
+          <h4>Daftar sekali, langsung masuk</h4>
+          <p>Challenge 7 Hari ada di platform kami: video misi dari <span data-creator>Cellos</span>, check-in harian, dan progres skor lu. Hasil kuis lu tetap kebuka walau nggak daftar.</p>
+          <div class="field">
+            <label for="leadNama">Nama panggilan</label>
+            <input id="leadNama" maxlength="14" autocomplete="nickname" placeholder="Contoh: Dimas" required>
+          </div>
+          <div class="field">
+            <label for="leadEmail">Email (buat masuk ke platform)</label>
+            <input id="leadEmail" type="email" inputmode="email" autocomplete="email" placeholder="nama@email.com" required>
+          </div>
+          <div class="field">
+            <label for="leadWa">Nomor WhatsApp (opsional, buat pengingat misi)</label>
+            <input id="leadWa" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xx xxxx xxxx">
+          </div>
+          <label class="consent"><input type="checkbox" id="leadOk" required><span>Saya berusia 21 tahun ke atas dan setuju data ini dipakai untuk membuat akses Challenge 7 Hari dan mengirim info SMGT. Bisa berhenti kapan saja.</span></label>
+          <p class="err" id="leadErr" role="alert"></p>
+          <button class="btn btn-main" type="submit" id="leadBtn"><i class="ph-bold ph-lock-key-open"></i><span>Buka Akses Gratis</span></button>
+        </form>
+        <div class="lead-ok hide" id="leadOkBox" aria-live="polite">
+          <i class="ph-bold ph-seal-check big" aria-hidden="true"></i>
+          <b id="leadOkTitle">Akses lu udah siap.</b>
+          <p id="leadOkTxt"></p>
+          <a class="btn btn-gold" id="leadGrup" href="#" target="_blank" rel="noopener" style="text-decoration:none"><i class="ph-bold ph-sign-in"></i>Masuk ke Platform</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="share">
+      <h3>Pamerin <em>gelar lu</em></h3>
+      <figure class="preview-wrap">
+        <img class="preview" id="preview" alt="Pratinjau kartu Story yang bakal lu bagiin">
+        <figcaption class="note">Kartu ini yang lu bagiin. Pas buat Story IG, TikTok, dan status WA.</figcaption>
+      </figure>
+      <div class="field">
+        <label for="nama">Nama panggilan di kartu</label>
+        <input id="nama" maxlength="14" placeholder="Contoh: Dimas" autocomplete="nickname">
+        <p class="note" id="namaNote"></p>
+      </div>
+      <div class="g">
+        <button class="btn btn-gold" type="button" id="btnShareImg" hidden><i class="ph-bold ph-share-fat"></i>Bagikan Hasil</button>
+        <button class="btn btn-wa" type="button" id="btnWa" hidden><i class="ph-bold ph-whatsapp-logo"></i>Tantang Teman</button>
+        <div class="row2">
+          <button class="btn btn-ghost" type="button" id="btnDl"><i class="ph-bold ph-download-simple"></i>Unduh</button>
+          <button class="btn btn-ghost" type="button" id="btnCopy"><i class="ph-bold ph-link"></i>Salin link</button>
+        </div>
+      </div>
+    </div>
+
+    <details class="more" id="moreTokoh">
+      <summary><span><span id="moreJudul">Kenalan lebih dalam sama tokoh lu</span><small>Profil, komposisi tenaga, kekuatan, dan yang paling klop</small></span><i class="ph-bold ph-caret-down" aria-hidden="true"></i></summary>
+      <div class="more-body">
+    <article class="block prose">
+      <p class="quote" id="hSatu"></p>
+      <p id="hProfil" style="margin-top:14px"></p>
+      <p id="hSisi" class="mut"></p>
+      <p class="vs-line" id="hVs"></p>
+    </article>
+
+    <section class="block">
+      <h3>Komposisi tenaga lu</h3>
+      <div class="comp" id="bars"></div>
+      <p class="note" id="kenapa" style="margin-top:14px"></p>
+    </section>
+
+    <section class="block">
+      <h3>Kekuatan lu</h3>
+      <ol class="str" id="kekuatan"></ol>
+    </section>
+
+    <section class="block">
+      <div class="split">
+        <div><b>Di luar</b><p id="hLuar"></p></div>
+        <div><b>Berdua</b><p id="hBerdua"></p></div>
+      </div>
+      <p class="said">Yang paling sering orang bilang ke lu: <span class="serif" id="hBilang"></span> <span class="mut" id="hCatatan"></span></p>
+    </section>
+
+    <section class="block">
+      <h3>Paling klop sama</h3>
+      <div class="klop" id="klop"></div>
+    </section>
+      </div>
+    </details>
+
+    <section class="block">
+      <h3>Cek kombinasi sama pasangan</h3>
+      <div id="invited" class="invite hide"></div>
+      <p class="mut" style="font-size:15px">Pilih tokoh pasangan lu, atau kirim tesnya biar dia isi sendiri.</p>
+      <div class="chips" id="chipsPas"></div>
+      <div class="kombi hide" id="kombi"><b id="kombiNama"></b><p id="kombiTxt" style="margin-top:6px"></p></div>
+      <div style="margin-top:14px"><button class="btn btn-ghost" type="button" id="btnPas"><i class="ph-bold ph-heart"></i>Kirim tes ke pasangan</button></div>
+    </section>
+
+    <section class="block care">
+      <i class="ph-bold ph-barbell" aria-hidden="true"></i>
+      <div><h3 style="margin-bottom:6px">Biar kekuatan lu awet</h3><p id="hJaga" style="font-size:15px"></p></div>
+    </section>
+
+    <section class="smgt" id="secSmgt" aria-labelledby="h-smgt">
+      <span class="logo" data-logo>SMGT</span>
+      <h3 id="h-smgt">Sekali Teguk, Langsung Semangat!</h3>
+      <p class="lead2" id="prodLead"></p>
+      <p class="cellos-say smgt-say" data-creator-line><b>Cellos:</b> Gue? Sekali teguk, langsung <span class="shout-in">SIAP BERAKSI LAGI!</span></p>
+      <figure class="prod"><img id="prodImg" alt="SMGT! First Box dan sachet" loading="lazy"></figure>
+      <div class="story">
+        <h4>Ramuan andalan orang tua kita.</h4>
+        <p>Dulu, orang tua kita punya ramuan andalan: susu, madu, telur. Diminum hangat, siap ngadepin hari.</p>
+        <p id="storyNow">Sekarang? Hidup makin padat, Brobries. Mana sempet ngeracik.</p>
+        <p>Makanya ada SMGT. Susu, madu, telur, plus ginseng, dalam satu sachet. Tinggal seduh.</p>
+        <p class="story-for" id="storyFor">Buat lu yang masih banyak maunya.</p>
+        <ul class="mau">
+          <li>Kerjaan mau beres.</li>
+          <li>Keluarga mau diperhatiin.</li>
+          <li>Sama pasangan?<span class="gold" style="display:block">Maunya tetap gacor.</span></li>
+        </ul>
+        <a class="btn btn-gold story-buy" id="storyBuy" href="#" target="_blank" rel="noopener"><i class="ph-bold ph-shopping-cart-simple"></i>Coba SMGT!</a>
+      </div>
+      <div class="letters" aria-label="Empat bahan di balik nama SMGT">
+        <div><b>S</b><span>Susu</span></div><div><b>M</b><span>Madu</span></div><div><b>G</b><span>Ginseng Korea</span></div><div><b>T</b><span>Telur</span></div>
+      </div>
+      <h3 class="h-kalem" style="margin-top:28px">Manfaat SMGT! buat hari lu</h3>
+      <div class="benefit" id="benefit"></div>
+      <div class="gift hide" id="gift">
+        <i class="ph-bold ph-gift" aria-hidden="true"></i>
+        <div><b>Beliin juga buat pasangan lu</b><p id="giftTxt"></p></div>
+        <a class="btn btn-gold" id="giftBtn" href="#" target="_blank" rel="noopener"><i class="ph-bold ph-heart"></i>Beliin buat Pasangan</a>
+      </div>
+      <p class="notobat"><b>Bukan obat kuat.</b> SMGT! pendukung kebiasaan lu, bukan pengganti tidur, olahraga, dan makan yang bener. Diminum rutin: jeda kerja, habis olahraga, atau malam berdua.</p>
+      <div class="packs" id="packs"></div>
+      <div class="buy" id="buy"></div>
+      <p class="fine" id="prodFine"></p>
+    </section>
+
+    <section class="tips" id="secTips" aria-labelledby="h-tips">
+      <div class="tips-by"><span class="ava" id="tipsAva"><i class="ph-bold ph-barbell"></i></span><div><b id="tipsBy">Tips dari Cellos</b><span id="tipsBySub">Botak Terkuat di Bumi</span></div></div>
+      <h3 id="h-tips"></h3>
+      <p class="tips-intro" id="tipsIntro"></p>
+      <details class="tips-more"><summary><i class="ph-bold ph-caret-down"></i><span>Lihat 6 jurus dari Cellos</span></summary>
+      <div class="rail" id="tips"></div>
+      <p class="tip-sign" id="tipsSign"></p>
+      </details>
+    </section>
+
+    <div class="again"><button class="link" type="button" id="btnUlang"><i class="ph-bold ph-arrow-counter-clockwise"></i>Ulangi tes</button></div>
+  </div>
+  <footer>Khusus usia 21 tahun ke atas. SMGT Challenge dibuat untuk hiburan dan edukasi gaya hidup, bukan tes medis. Skor dihitung dari jawaban lu, bukan dari pengukuran fisik. Kalau ada keluhan kesehatan, konsultasikan ke tenaga kesehatan.</footer>
+</section>
+
+</main>
+
+<div class="dock" id="dock" aria-hidden="true">
+  <button class="btn btn-main" type="button" data-start tabindex="-1"><i class="ph-bold ph-lightning"></i><span>Terima Tantangan</span></button>
+</div>
+
+<script>
+(() => {
+'use strict';
+// ====== KONFIGURASI ======
+// Dasar aset gambar tokoh. Kalau file ini di-deploy di domain yang sama dengan aset, ganti jadi '' (relatif).
+const ASSET = 'https://umm-website.vercel.app';
+// Tautan yang dibagikan. Default: alamat halaman ini.
+const BASE = location.protocol.startsWith('http') ? location.origin + location.pathname : 'https://usahamajumundur.com/cek-kuat/';
+const BASE_SHORT = BASE.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+// ====== DATA (sama dengan /cek-energi) ======
+const TIPE = { A: 'Penggerak', B: 'Pemikat', C: 'Andalan', D: 'Penghangat' };
+const ILUS = id => ASSET + '/assets/img/tokoh-' + id + '-v2.webp';
+const POTRET = id => ASSET + '/assets/img/potret-' + id + '-v2.webp';
+const TOKOH = [
+  { id:'gatotkaca', vsCellos:'Lu ngegas duluan, semua langsung ikut. ENERGI LU NULAR! Kalau Botak Terkuat di Bumi yang ngegas, yang lain cuma bisa nonton.', tipe:'A', gender:'pria', nama:'Gatotkaca', julukan:'Sang Penggerak',
+    kartu:'Tenaganya nggak ada habisnya. Yang minta jeda duluan, pasti bukan dia.',
+    satu:'Mesin yang baru panas pas yang lain udah kelar.',
+    profil:'Lu tuh yang paling duluan gerak dan paling akhir berhenti. Energi lu gede, spontan, dan nular; ada rencana dikit, lu yang bikin semua orang ikut. Pasangan lu mungkin pernah bilang lu nggak punya tombol off, dan itu pujian.',
+    luar:'Lari pagi, meeting, nongkrong malam. Masih sempet nawarin ronde kopi berikutnya.',
+    berdua:'Kata "capek" nggak ada di kamus lu. Yang minta istirahat duluan, jelas bukan lu.',
+    kekuatan:['Stamina yang bikin orang lain angkat tangan duluan.','Semangat mulai, mau pagi atau tengah malam.','Nggak pernah biarin suasana jadi garing.'],
+    bilang:'Lu ngecas di mana sih sebenernya?',
+    klop:[['larasati','Dia yang atur tempo, biar tenaga lu awet.'],['arimbi','Dua-duanya nggak kenal kata cukup.']],
+    jaga:'Tenaga segede ini butuh bensin yang sepadan. Tidur 7 jam dan cukup protein, biar "ronde berikutnya" tetap ada, bukan cuma pas lagi hoki.' },
+  { id:'srikandi', vsCellos:'Lu bilang "ayo", semua langsung gerak. GUE SUKA MENTAL LU! Gue juga gitu. Nggak pernah nunggu, langsung naik ring.', tipe:'A', gender:'wanita', nama:'Srikandi', julukan:'Sang Pemberani',
+    kartu:'Nggak nunggu kode. Dia yang mulai, dia juga yang nentuin kapan selesai.',
+    satu:'Pegang kendali, dan semua orang lega karenanya.',
+    profil:'Lu bukan tipe yang nunggu. Mau sesuatu, lu yang ngajak, lu yang atur, lu juga yang mastiin semuanya beres. Berani versi lu itu jelas: orang di sekitar lu selalu tahu lu maunya apa.',
+    luar:'Yang pesen meja, yang pilih tempat, yang bilang "ayo" pas yang lain masih mikir.',
+    berdua:'Kode itu buat orang lain. Lu ngomong langsung, dan pulangnya nggak ada yang kecewa.',
+    kekuatan:['Inisiatif yang bikin pasangan nggak perlu nebak-nebak.','Pegang kendali dengan pede, dari awal sampai selesai.','Energi yang nggak surut cuma gara-gara orang lain ragu.'],
+    bilang:'Oke, oke, gue ikut.',
+    klop:[['nakula','Dia yang bikin hangat, lu yang ngajak.'],['bima','Dia nggak goyah, ronde berapa pun oke.']],
+    jaga:'Orang yang selalu mimpin kadang lupa ngisi ulang. Sisihin waktu yang beneran buat diri lu sendiri, biar inisiatif lu datang dari tenaga yang penuh.' },
+  { id:'arjuna', vsCellos:'Satu kode, langsung kena. TEPAT SASARAN, BOSSS! Gue nggak pernah ngasih kode. Gue cukup naik ring.', tipe:'B', gender:'pria', nama:'Arjuna', julukan:'Sang Pemikat',
+    kartu:'Milih menu boleh lama. Soal bidikan, sekali kena, nggak mau lepas.',
+    satu:'Satu kode, tepat sasaran, beres.',
+    profil:'Lu tahu persis apa yang lu mau dan gimana dapetinnya. Lu nggak perlu banyak gaya buat narik perhatian; satu kode kecil biasanya udah cukup. Orang inget lu karena selalu tepat sasaran.',
+    luar:'Ngomong dikit, tapi semua orang dengerin. Hafal selera orang yang lu peduliin.',
+    berdua:'Lu tahu titiknya. Pasangan lu nggak perlu ngejelasin dua kali.',
+    kekuatan:['Tepat sasaran: tahu titik yang bikin pasangan luluh.','Daya tarik yang kalem, nggak perlu pamer.','Fokus penuh ke satu orang, dan dia ngerasain itu.'],
+    bilang:'Kok lu bisa tahu?',
+    klop:[['sumbadra','Dua-duanya nggak pernah meleset.'],['larasati','Tepat sasaran, tepat waktu.']],
+    jaga:'Bidikan tajam butuh kepala yang tenang. Kelola stres kerja dan kurangi begadang; fokus lu itu modal utama, di kantor maupun di rumah.' },
+  { id:'sumbadra', vsCellos:'Senyum dikit, orang rela lembur. ITU BARU PESONA! Gue senyum dikit, lawan langsung mundur.', tipe:'B', gender:'wanita', nama:'Sumbadra', julukan:'Sang Pesona',
+    kartu:'Senyum dikit aja, pasangan rela lembur.',
+    satu:'Nggak perlu minta. Orang udah nawarin duluan.',
+    profil:'Lu bisa bikin orang rela ngelakuin banyak hal cuma dengan satu kode. Kayak Sumbadra yang dikejar Arjuna, bukan sebaliknya, lu tahu efek senyum lu dan makenya dengan cerdas. Pesona lu ada di cara lu bikin orang ngerasa dipilih, sambil pendirian lu tetap teguh.',
+    luar:'Bilang "nggak usah repot", tapi semua orang tetap repot dengan senang hati.',
+    berdua:'Satu senyum, pasangan lu tiba-tiba punya tenaga ekstra buat lembur.',
+    kekuatan:['Daya tarik yang bikin pasangan selalu pengen lebih.','Tahu kapan kasih kode, kapan biarin orang nebak.','Pede yang kerasa tanpa perlu diomongin.'],
+    bilang:'Jangan senyum gitu kalau nggak siap gue lanjut.',
+    klop:[['bima','Satu senyum, dia angkat apa aja. Termasuk lu.'],['arjuna','Dua-duanya nggak pernah meleset.']],
+    jaga:'Pesona paling kenceng pas badan lagi seger. Jaga jam tidur dan gerak ringan tiap hari, biar pede lu datang dari badan yang enak.' },
+  { id:'bima', vsCellos:'Semua belanjaan, sekali angkat. ANDALAN BENERAN, BROBRIES! Gue? Yang gue angkat sabuk juara.', tipe:'C', gender:'pria', nama:'Bima', julukan:'Sang Andalan',
+    kartu:'Tas kecil cuma pemanasan. Angkat pasangan? Enteng.',
+    satu:'Kokoh kayak tembok, hatinya selembut tahu sutra.',
+    profil:'Lu tuh orang yang bisa diandelin sampai akhir. Kekuatan lu nggak berisik, tapi semua orang tahu lu ada. Pasangan lu nggak perlu khawatir soal yang berat-berat, karena lu yang nanggung, dengan senang hati.',
+    luar:'Yang bawa semua belanjaan sekali angkat. Yang dipanggil kalau ada yang macet.',
+    berdua:'Tenaga lu dibikin buat jarak jauh, bukan sprint. Ronde berapa pun, lu masih berdiri tegak.',
+    kekuatan:['Kuat dan kokoh, nggak goyah di tengah jalan.','Tenaga yang dibikin buat jarak jauh.','Pasangan ngerasa aman, harfiah maupun kiasan.'],
+    bilang:'Lu nggak capek? Gue yang lihat aja capek.',
+    klop:[['srikandi','Dia yang mulai, lu yang nggak goyah.'],['arimbi','Kuat ketemu tahan lama. Pasangan lain cuma bisa nonton.']],
+    jaga:'Orang kuat sering lupa badannya juga perlu dirawat. Latihan beban rutin dan makan cukup, biar kekuatan ini masih ada sepuluh tahun lagi.' },
+  { id:'arimbi', vsCellos:'Butuh apa aja, lu pasti punya cadangannya. CIRCLE BUTUH ORANG KAYAK LU! Gue juga nggak pernah kehabisan. Mau berapa ronde pun, gue siap ladenin.', tipe:'C', gender:'wanita', nama:'Arimbi', julukan:'Sang Pelindung',
+    kartu:'Camilan cadangan ada. Ronde kedua juga ada.',
+    satu:'Selalu punya cadangan. Nggak pernah habis duluan.',
+    profil:'Lu selalu punya cadangan: tenaga, rencana, sampai perhatian. Lu nggak pernah kehabisan di tengah jalan, dan orang di sekitar lu tahu itu. Lu nunjukin sayang lewat selalu siap.',
+    luar:'Tas lu kayak kantong Doraemon versi dewasa. Butuh apa pun, ada.',
+    berdua:'Ronde kedua bukan kejutan. Lu emang udah nyiapin.',
+    kekuatan:['Daya tahan yang nggak habis setelah satu putaran.','Siap kapan pun, tanpa drama, tanpa pamer.','Pelindung yang bikin pasangan nggak ngerasa sendirian.'],
+    bilang:'Lu bawa itu juga? Sejak kapan?',
+    klop:[['gatotkaca','Tenaga ketemu cadangan. Nggak ada yang bilang cukup.'],['nakula','Dia siapin makan malam, lu siapin ronde kedua.']],
+    jaga:'Cadangan yang terus dipakai juga perlu diisi. Pastiin lu juga dapet perhatian balik, dan jaga asupan zat besi serta tidur yang cukup.' },
+  { id:'nakula', vsCellos:'Tanggal kecil yang dia sendiri lupa, lu yang inget. ITU BARU PERHATIAN, BOSSS! Gue cuma hafal satu tanggal: kapan BYON mulai. Sisanya urusan lawan.', tipe:'D', gender:'pria', nama:'Nakula', julukan:'Sang Penghangat',
+    kartu:'Makan malam dia yang siapin. Pencuci mulutnya bakal lu inget terus.',
+    satu:'Pemanasan yang sabar, hasil yang selalu diinget.',
+    profil:'Lu merhatiin hal-hal kecil yang orang lain lewatin. Kayak Nakula, Pandawa paling ganteng yang justru dikenal karena setia dan telaten, cara lu mulai selalu dari bikin pasangan nyaman duluan. Sisanya ngalir sendiri.',
+    luar:'Inget pesanan kopinya, inget tanggal kecil yang dia sendiri lupa.',
+    berdua:'Lu nggak pernah buru-buru, dan pasangan lu tahu persis kenapa itu sepadan.',
+    kekuatan:['Perhatian sampai ke detail yang pasangan nggak nyangka lu tahu.','Pemanasan sabar, nggak pernah buru-buru.','Kehangatan yang bikin pasangan selalu pengen pulang.'],
+    bilang:'Lu ini perhatian atau modus?', catatan:'Jawabannya: dua-duanya.',
+    klop:[['srikandi','Dia yang ngajak, lu yang bikin hangat.'],['sumbadra','Pencuci mulutnya selalu ada lanjutan.']],
+    jaga:'Kehangatan butuh kepala yang tenang. Batasi kopi sore dan layar sebelum tidur, biar pas di rumah, pikiran lu juga ikut pulang.' },
+  { id:'larasati', vsCellos:'Jadwal rapi, tempo pas, semua beres tepat waktu. RESPECT! Kalau gue, nggak usah atur tempo. Berapa ronde pun, gue siap.', tipe:'D', gender:'wanita', nama:'Larasati', julukan:'Sang Selaras',
+    kartu:'Jadwal rapi, tempo pas. Nggak ada yang buru-buru.',
+    satu:'Tempo yang pas. Nggak pernah selesai sebelum waktunya.',
+    profil:'Lu tahu ritme yang pas buat segala hal. Yang orang kira spontan, sebenernya udah lu rencanain. Lu nggak pernah buru-buru, dan pasangan lu belajar kalau nunggu bareng lu selalu sepadan.',
+    luar:'"Spontan kok," kata lu, sambil buka planner yang udah penuh stiker warna.',
+    berdua:'Malam panjang yang nggak kerasa panjang, karena temponya lu yang pegang.',
+    kekuatan:['Tempo yang bikin semuanya pas, nggak kurang, nggak lebih.','Selaras yang kelihatan kayak kebetulan, padahal keahlian.','Tenang yang bikin malam panjang kerasa ringan.'],
+    bilang:'Lu udah jadwalin ini dari kapan?',
+    klop:[['gatotkaca','Dia ngebut, lu yang atur tempo. Hasilnya pas, dan lama.'],['arjuna','Tepat sasaran, tepat waktu.']],
+    jaga:'Orang yang selaras sama semua orang kadang lupa ritme badannya sendiri. Jaga jadwal makan dan tidur; badan yang punya ritme itu sumber tempo pas lu.' }
+];
+const byId = {}; TOKOH.forEach(t => byId[t.id] = t);
+const HINT = { gatotkaca:'Yang ngajak ronde berikutnya pas yang lain udah tepar.', srikandi:'Nggak nunggu kode. Dia yang bilang "ayo" duluan.', arjuna:'Diem, senyum, bidik. Sekali kena, nggak dilepas.', sumbadra:'Nggak pernah minta. Tapi semua orang nawarin.', bima:'Kokoh dari ronde pertama sampai terakhir. Napas masih santai.', arimbi:'Stoknya selalu ada. Camilan, tenaga, ronde kedua.', nakula:'Pelan-pelan dulu. Yang diinget orang justru pencuci mulutnya.', larasati:'Tempo pas, jadwal rapi. Nggak ada yang buru-buru.' };
+
+const TANYA = [
+  'Jumat malem. Pasangan chat: "Malam ini terserah kamu." Lu...',
+  'Kalau temen tongkrongan ditanya lu orangnya kayak gimana, jawabannya:',
+  'Abis "sesi panjang" yang nguras tenaga, lu...',
+  'Pulang kerja, badan remuk. Tapi pasangan kasih kode. Lu...',
+  'Soal "mulai" duluan, lu tuh...',
+  'Pasangan lagi cerita soal lu ke temennya. Kira-kira dia bilang:',
+  'Weekend kosong, nggak ada rencana. Lu biasanya...',
+  'Kalimat yang paling lu banget:'
+];
+const OPSI = [
+  [['A','Langsung ambil kunci motor, mikirnya nanti.'],['B','Udah tahu dia lagi pengen apa. Tinggal jalan.'],['C','Oke. Gue siapin plan B juga, jaga-jaga.'],['D','Pesen makanan kesukaan dia dulu, sisanya lihat nanti.']],
+  [['A','"Nggak ada capeknya tuh anak."'],['B','"Kalau udah ngincer sesuatu, pasti dapet."'],['C','"Kalau ada apa-apa, telepon dia aja."'],['D','"Nongkrong sama dia tuh betah."']],
+  [['A','Nanya: "Lanjut?"'],['B','Senyum puas. Sesuai rencana.'],['C','Masih bisa bangun, bikinin dia minum.'],['D','Peluk dulu, ngobrol lama.']],
+  [['A','Capeknya mendadak ilang.'],['B','Langsung tahu harus ngapain.'],['C','Tenaga gue selalu ada sisa buat dia.'],['D','Mandi dulu. Nggak usah buru-buru.']],
+  [['A','Hampir selalu gue yang ngajak duluan.'],['B','Lirik dikit aja, dia udah paham.'],['C','Nunggu dia, tapi gue selalu siap.'],['D','Nyalain lagu, matiin lampu dulu.']],
+  [['A','"Staminanya, ya ampun."'],['B','"Dia tuh tahu banget aku maunya apa."'],['C','"Nggak pernah ngeluh capek."'],['D','"Sabar banget orangnya."']],
+  [['A','Ngajak keluar, tujuannya dipikir di jalan.'],['B','Ajak ke tempat favorit dia.'],['C','Beresin kerjaan rumah dulu, abis itu bebas.'],['D','Masak bareng terus nonton di rumah.']],
+  [['A','"Udahan? Baru juga mulai."'],['B','"Sekali dapet, nggak gue lepas."'],['C','"Santai, gue masih kuat."'],['D','"Pelan-pelan aja, kita nggak buru-buru."']]
+];
+const KOMBI = {
+  AA:'Dua-duanya nggak pernah nunggu. Masalahnya cuma siapa yang duluan.', AB:'Cukup senyum sekali, langsung jalan sampai pagi.', AC:'Tenaga ketemu cadangan. Nggak ada yang bilang cukup.', AD:'Satu ngebut, satu lagi atur tempo. Hasilnya pas, dan lama.',
+  BA:'Bidikan tepat, ajakan cepat. Nggak ada waktu terbuang.', BB:'Dua-duanya nggak pernah meleset.', BC:'Satu tahu titiknya, satu lagi pegang cadangan. Pasangan paling tenang di grup.', BD:'Tepat sasaran, tepat waktu. Kelihatan spontan, padahal dijadwalkan.',
+  CA:'Begitu dimulai, nggak ada yang goyah. Ronde berapa pun oke.', CB:'Satu senyum, dia angkat apa aja. Termasuk lu.', CC:'Kuat ketemu tahan lama. Pasangan lain cuma bisa nonton.', CD:'Kokoh dan sabar. Nggak ada yang buru-buru, nggak ada yang capek.',
+  DA:'Satu ngajak, satu lagi bikin hangat. Nggak ada yang pulang kecewa.', DB:'Pencuci mulutnya selalu ada lanjutan.', DC:'Makan malam beres, ronde kedua juga udah disiapin.', DD:'Hangat dan pas tempo. Malam panjang yang nggak terasa panjang.'
+};
+const BOOST = { A:'+STAMINA', B:'+FOKUS', C:'+KEKUATAN', D:'+KEHANGATAN' };
+const SISI = { A:'lu tahu kapan harus gerak duluan', B:'lu tahu persis titik yang bikin orang luluh', C:'lu selalu punya cadangan buat jarak jauh', D:'lu tahu kapan harus pelan dan bikin hangat dulu' };
+const SIFAT = { A:'tenaga', B:'ketepatan', C:'kekuatan', D:'kehangatan' };
+const MENONJOL = { A:'Jawaban lu sendiri yang bilang: ', B:'Satu jawaban lu ngerangkum semuanya: ', C:'Jawaban lu tadi udah ngomong sendiri: ', D:'Jawaban lu tadi kedengerannya gini: ' };
+
+// ====== SMGT: KONFIGURASI BRAND (ubah di sini) ======
+const CONFIG = {
+  brand: 'SMGT',
+  logoUrl: ASSET + '/assets/img/smgt-logo-trim-480.webp', // logo SMGT!. Kosongkan = kotak teks "SMGT".
+  creator: 'Cellos',                 // kreator penantang. Kosongkan kalau tidak dipakai.
+  creatorTitle: 'Botak Terkuat di Bumi',
+  analyticsEndpoint: '',             // opsional: URL penerima event (POST JSON lewat sendBeacon)
+  // Lead magnet Challenge 7 Hari: data lead dikirim (POST JSON) ke leadEndpoint, mis. Supabase Edge Function / Google Apps Script / webhook CRM.
+  lead: {
+    endpoint: '',                    // WAJIB diisi sebelum tayang. Kosong = lead hanya tercatat di perangkat (mode uji).
+    platformUrl: 'https://umm-website.vercel.app/', // GANTI: alamat platform eksklusif Challenge 7 Hari (halaman login/daftar)
+    batchMulai: 'Senin depan'        // teks jadwal batch berikutnya
+  },
+  creatorFoto: 'cellos-juara.jpg',  // foto Cellos untuk avatar di bagian tips (dipotong ke wajah lewat CSS)
+  produk: {
+    nama: 'SMGT! Susu Madu Ginseng Telur',
+    lead: 'Kenalin, ini SMGT. Minuman buat orang dewasa yang mau tetap semangat, aktif, dan pede. Di kerjaan, di rumah, sampai pas berdua sama pasangan.',
+    gambar: ASSET + '/assets/img/smgt-pilihan-01.webp',
+    halaman: 'https://umm-website.vercel.app/smgt/',
+    beli: 'https://umm-website.vercel.app/beli/',
+    agen: 'https://umm-website.vercel.app/agen/',
+    paket: [
+      { id: 'first_box', label: 'Buat kenalan', nama: 'First Box', isi: '5 sachet, 5 gelas hangat', harga: 'Rp 195.000', coret: '' },
+      { id: 'routine_15', label: 'Lebih hemat Rp 30.000', nama: 'Routine 15', isi: '15 sachet buat stok sebulan', harga: 'Rp 555.000', coret: 'Rp 585.000', hemat: true }
+    ],
+    toko: [
+      { label: 'Shopee', url: 'https://shopee.co.id/', ikon: 'ph-shopping-bag' },
+      { label: 'TikTok Shop', url: 'https://shop.tiktok.com/', ikon: 'ph-storefront' }
+    ],
+    legal: 'BPOM RI MD 273182000300081, bersertifikat Halal, standar HACCP. Mengandung susu dan telur. Kafein alami dari guarana.'
+  }
+};
+
+// ====== TRACKING ======
+// Semua event masuk ke window.dataLayer (Google Tag Manager) dan, bila terpasang, gtag (GA4), fbq (Meta Pixel), ttq (TikTok Pixel).
+// Event: landing_view, challenge_visit, quiz_cta, gender_pick, quiz_start, quiz_progress, quiz_complete, card_open, share, challenge_link_create, lead_view, lead_start, lead_submit, platform_open,
+//        habit_check, edu_view, offer_view, offer_click.  Tambah ?debug=1 di URL untuk melihat event di layar.
+const SID = Math.random().toString(36).slice(2, 10);
+const DEBUG = /[?&]debug=1/.test(location.search);
+function track(ev, props) {
+  const p = Object.assign({}, props || {});
+  const d = Object.assign({ event: 'smgt_' + ev, quiz: 'smgt_challenge', sid: SID, seg: (typeof S !== 'undefined' && S.seg) || null }, p);
+  try { (window.dataLayer = window.dataLayer || []).push(d); } catch (e) {}
+  try { if (window.gtag) window.gtag('event', 'smgt_' + ev, p); } catch (e) {}
+  try { if (window.fbq) window.fbq('trackCustom', 'smgt_' + ev, p); } catch (e) {}
+  try { if (window.ttq) window.ttq.track('smgt_' + ev, p); } catch (e) {}
+  try { if (CONFIG.analyticsEndpoint && navigator.sendBeacon) navigator.sendBeacon(CONFIG.analyticsEndpoint, JSON.stringify(Object.assign({ ts: Date.now(), path: location.pathname }, d))); } catch (e) {}
+  if (DEBUG) {
+    let el = document.getElementById('dbg');
+    if (!el) { el = document.createElement('div'); el.id = 'dbg'; el.className = 'dbg'; document.body.appendChild(el); }
+    el.insertAdjacentHTML('afterbegin', '<div>' + esc(ev + ' ' + JSON.stringify(p)) + '</div>');
+  }
+}
+
+// ====== STATE ======
+const S = { gender:'', tebak:'', idx:0, jawab:[], hab:{}, urut:[], kunci:false, h:null, sent:null, skor:null, pct:0, pas:'', nama:'' };
+// Parameter undangan: ?dari=<tokoh>&nama=<nama>&s=<skor>. Lawan jenis = kombinasi pasangan; sesama = duel skor.
+let dari = '', dariNama = '', dariSkor = 0;
+try {
+  const q = new URLSearchParams(location.search);
+  if (byId[q.get('dari')]) dari = q.get('dari');
+  dariNama = (q.get('nama') || '').slice(0, 14);
+  const s = parseInt(q.get('s'), 10); if (s >= 0 && s <= 100) dariSkor = s;
+} catch (e) {}
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const buzz = p => { try { if (navigator.userActivation && navigator.userActivation.isActive && navigator.vibrate) navigator.vibrate(p); } catch (e) {} };
+let cur = 'intro';
+const show = id => {
+  cur = id;
+  document.body.classList.toggle('kartu-tutup', id === 'hasil' && !$('after').classList.contains('on'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === 's-' + id));
+  $('dock').classList.remove('on');
+  window.scrollTo({ top: 0, behavior: 'auto' });
+};
+const toast = (t, ms = 3600) => { const el = $('toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('on'), ms); };
+
+// ====== 10 PERTANYAAN: 8 soal tipe (tidak diubah) + 2 soal kebiasaan ======
+// Soal kebiasaan disisipkan di posisi 4 dan 8 supaya ritmenya selang-seling. Jawaban tipe tetap disimpan per indeks asli (0-7).
+const KEBIASAAN = {
+  tidur: { tanya: 'Malem sebelum kerja, lu biasanya tidur jam berapa? Jujur ya.', boost: '+RITME',
+    opsi: [[3, 'Sebelum jam 11, hampir tiap malem.'], [2, 'Sekitar jam 12-an.'], [1, 'Lewat jam 12, keasyikan scroll HP.'], [1, 'Nggak tentu, tergantung kerjaan.']] },
+  gerak: { tanya: 'Seminggu terakhir, berapa kali lu olahraga minimal 20 menit?', boost: '+GERAK',
+    opsi: [[3, 'Tiga kali atau lebih.'], [2, 'Sekali dua kali.'], [1, 'Cuma jalan kaki, itu pun kalau sempet.'], [0, 'Belum sama sekali.']] }
+};
+const QS = [{ t:0 }, { t:1 }, { t:2 }, { h:'tidur' }, { t:3 }, { t:4 }, { t:5 }, { h:'gerak' }, { t:6 }, { t:7 }];
+const NQ = QS.length;
+const shuffle = () => QS.map(() => { const a = [0,1,2,3]; for (let i = 3; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; });
+
+// ====== INTRO ======
+// Logo placeholder: ganti CONFIG.logoUrl
+document.querySelectorAll('[data-cellos-ava]').forEach(el => { if (CONFIG.creatorFoto) el.innerHTML = '<img src="' + esc(CONFIG.creatorFoto) + '" alt="">'; });
+document.querySelectorAll('[data-logo]').forEach(el => {
+  if (CONFIG.logoUrl) el.innerHTML = '<img src="' + esc(CONFIG.logoUrl) + '" alt="' + esc(CONFIG.brand) + '">'; else el.textContent = CONFIG.brand;
+});
+if (!CONFIG.creator) document.querySelectorAll('[data-creator-line]').forEach(el => el.remove());
+document.querySelectorAll('[data-creator]').forEach(el => { el.textContent = CONFIG.creator || 'kami'; });
+$('heroImg').onerror = function () { this.remove(); };
+// Meter provokasi: naik-turun, angka asli baru keluar setelah tes. Berhenti saat tidak terlihat.
+(() => {
+  const f = $('meterFill'), t = $('meterTxt'); let v = 50, d = 1, iv = null;
+  const tick = () => { v += d * (3 + Math.random() * 6); if (v > 97) { v = 97; d = -1; } if (v < 43) { v = 43; d = 1; } f.style.transform = 'scaleX(' + ((v - 40) / 60) + ')'; t.textContent = Math.round(v) + '?'; };
+  const io = new IntersectionObserver(es => { const on = es[0].isIntersecting && !matchMedia('(prefers-reduced-motion: reduce)').matches; if (on && !iv) iv = setInterval(tick, 480); if (!on && iv) { clearInterval(iv); iv = null; } });
+  io.observe(f);
+})();
+// Urutan: 4 Ksatria (baris atas), lalu 4 Srikandi (baris bawah)
+$('teaserDeck').innerHTML = TOKOH.filter(t => t.gender === 'pria').concat(TOKOH.filter(t => t.gender === 'wanita')).map(t => `<div class="mini"><img src="${POTRET(t.id)}" alt="" loading="lazy" onerror="this.remove()"><span class="q">?</span></div>`).join('');
+// Dok CTA bawah muncul saat CTA hero keluar layar (khusus layar awal)
+new IntersectionObserver(es => { $('dock').classList.toggle('on', cur === 'intro' && !es[0].isIntersecting && es[0].boundingClientRect.top < 0); }).observe($('heroCta'));
+new IntersectionObserver(es => { if (es[0].isIntersecting) $('dock').classList.remove('on'); }).observe(document.querySelector('.closing .btn'));
+
+// "Terima Tantangan" -> layar pilih Pria / Wanita -> layar tebak tokoh
+const bukaGender = () => {
+  document.querySelectorAll('#genderGrid .gcard').forEach(b => b.setAttribute('aria-pressed', b.dataset.g === S.gender));
+  show('gender');
+};
+const terimaTantangan = (btn, asal) => {
+  track('quiz_cta', { posisi: asal || 'hero' });
+  const go = bukaGender;
+  if (!btn || matchMedia('(prefers-reduced-motion: reduce)').matches) return go();
+  btn.classList.add('go'); buzz(30);
+  const c = btn.querySelector('.charge');
+  if (c) { c.style.transition = 'transform .7s cubic-bezier(.4,0,.2,1)'; c.style.transform = 'scaleX(1)'; }
+  setTimeout(() => { btn.classList.remove('go'); if (c) { c.style.transition = 'none'; c.style.transform = 'scaleX(0)'; } go(); }, 720);
+};
+$('btnPria').onclick = e => terimaTantangan(e.currentTarget, 'hero');
+document.querySelectorAll('[data-start]').forEach(b => b.onclick = () => terimaTantangan(null, b.closest('.dock') ? 'dock' : 'bawah'));
+document.querySelectorAll('#genderGrid img[data-potret]').forEach(img => { img.src = POTRET(img.dataset.potret); img.onerror = () => img.remove(); });
+// Umur: syarat 21+ sekaligus penentu segmen suara. Disimpan di perangkat ini supaya tidak ditanya ulang.
+const segDari = u => u >= 45 ? 'senior' : u < 30 ? 'muda' : 'inti';
+const cekUmur = (diam) => {
+  const u = parseInt($('umur').value, 10);
+  const ok = u >= 21 && u <= 99;
+  $('genderGrid').classList.toggle('kunci', !ok);
+  document.querySelectorAll('#genderGrid .gcard').forEach(c => { if (ok) c.removeAttribute('aria-disabled'); else c.setAttribute('aria-disabled', 'true'); });
+  $('ageWrap').classList.remove('salah');
+  if (ok) { const lama = S.seg; S.umur = u; S.seg = segDari(u); if (S.seg !== lama) { terapkanSeg(); suarakanSemua(); } $('ageErr').textContent = ''; try { localStorage.setItem('smgt-umur', String(u)); } catch (e) {} }
+  else if (!diam) $('ageErr').textContent = (u > 0 && u < 21) ? 'Maaf, kuis ini khusus usia 21 tahun ke atas.' : (u > 99 ? 'Cek lagi umurnya, ya.' : '');
+  return ok;
+};
+try { const su = localStorage.getItem('smgt-umur'); if (su) $('umur').value = su; } catch (e) {}
+setTimeout(() => cekUmur(true), 0); // ditunda: lapisan suara senior didefinisikan lebih bawah
+$('umur').addEventListener('input', () => cekUmur(false));
+$('umur').addEventListener('change', () => { if (cekUmur(false)) track('age_input', { seg: S.seg }); });
+document.querySelectorAll('#genderGrid .gcard').forEach(b => b.onclick = () => {
+  if (!cekUmur(false)) {
+    $('ageWrap').classList.remove('salah'); void $('ageWrap').offsetWidth; $('ageWrap').classList.add('salah');
+    const u = parseInt($('umur').value, 10);
+    $('ageErr').textContent = (u > 0 && u < 21) ? 'Maaf, kuis ini khusus usia 21 tahun ke atas.' : 'Isi umur dulu, ya.';
+    track('age_gate_block', { gender: b.dataset.g });
+    try { $('umur').focus(); } catch (e) {}
+    return;
+  }
+  track('age_input', { seg: S.seg });
+  S.gender = b.dataset.g; S.tebak = ''; suarakanSemua();
+  track('gender_pick', { gender: S.gender });
+  document.querySelectorAll('#genderGrid .gcard').forEach(x => x.setAttribute('aria-pressed', x === b));
+  setTimeout(() => { renderGuess(); show('tebak'); }, 220);
+});
+document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => show(b.dataset.go));
+
+function saringRaw(n) { return saring(n).nama; }
+
+// ====== TEBAK ======
+function renderGuess() {
+  $('pillGroup').textContent = S.gender === 'pria' ? 'Ksatria (pria)' : 'Srikandi (wanita)';
+  const list = TOKOH.filter(t => t.gender === S.gender);
+  $('guessGrid').innerHTML = list.map(t => `<button type="button" class="gcard" data-id="${t.id}" aria-pressed="${S.tebak === t.id}">
+      <img src="${POTRET(t.id)}" alt="" onerror="this.remove()"><span class="ov"></span>
+      <span class="tx"><b>${t.nama.toUpperCase()}<i class="ph-bold ph-check-circle"></i></b><small>${esc(HINT[t.id])}</small></span></button>`).join('');
+  $('guessGrid').querySelectorAll('.gcard').forEach(b => b.onclick = () => { S.tebak = S.tebak === b.dataset.id ? '' : b.dataset.id; renderGuess(); });
+  $('mulaiLbl').textContent = S.tebak ? 'Gas, tebakan gue ' + byId[S.tebak].nama : 'Skip, langsung mulai';
+}
+$('btnMulai').onclick = () => {
+  S.urut = shuffle(); S.idx = 0; S.jawab = []; S.hab = {}; S.kunci = false;
+  track('quiz_start', { gender: S.gender, dari_tantangan: !!dari, tebak: S.tebak || 'lewati' });
+  renderQ(); show('tanya'); try { $('qh').focus({ preventScroll: true }); } catch (e) {}
+};
+
+// ====== TANYA ======
+const SEMANGAT = ['Jawab yang beneran lu lakuin. Gue jawab semua ini sambil merem.', 'Santai, Brobries. Gue sih nggak pernah ragu.', 'Pilihan bagus. Hampir sebagus pilihan gue.', 'Soal kebiasaan. Jawab jujur. Kebiasaan gue mah cuma satu: jadi juara.', 'Tenaga lu mulai kebaca. Tenaga gue? Nggak usah dibaca, udah jelas terkuat.', 'Setengah jalan. Gue kelarin ginian sekali tarik napas.', 'Empat lagi. Kartu lu mulai panas. Kartu gue? Udah kebakar dari tadi.', 'Soal kebiasaan terakhir. Jujur aja, Brobries. Botak Terkuat di Bumi nggak pernah bohong.', 'Dikit lagi kebuka. Gue penasaran lu bisa nyamain gue nggak.', 'SOAL TERAKHIR. Juara selalu nutup kuat, kayak gue.'];
+function renderQ() {
+  const i = S.idx, q = QS[i];
+  $('qNo').textContent = i + 1;
+  $('pFill').style.transform = 'scaleX(' + (i / NQ) + ')';
+  $('qsub').textContent = isSenior() ? isiSapa(SEMANGAT_SENIOR[i]) : isInti() ? SEMANGAT_INTI[i] : SEMANGAT[i];
+  if (q.h) {
+    const K = KEBIASAAN[q.h];
+    $('qh').textContent = K.tanya;
+    $('opts').innerHTML = S.urut[i].map((oi, k) => `<button type="button" class="opt" data-k="${oi}" aria-pressed="${S.hab[q.h] === oi}"><span class="l">${'ABCD'[k]}</span><span>${esc(K.opsi[oi][1])}</span></button>`).join('');
+  } else {
+    $('qh').textContent = TANYA[q.t];
+    $('opts').innerHTML = S.urut[i].map((oi, k) => { const o = OPSI[q.t][oi]; return `<button type="button" class="opt" data-k="${o[0]}" aria-pressed="${S.jawab[q.t] === o[0]}"><span class="l">${'ABCD'[k]}</span><span>${esc(o[1])}</span></button>`; }).join('');
+  }
+  $('opts').querySelectorAll('.opt').forEach(b => b.onclick = () => pilih(b.dataset.k, b));
+}
+function pilih(k, btn) {
+  if (S.kunci) return; S.kunci = true;
+  const q = QS[S.idx];
+  if (q.h) S.hab[q.h] = +k; else S.jawab[q.t] = k;
+  $('opts').querySelectorAll('.opt').forEach(b => b.setAttribute('aria-pressed', b === btn));
+  $('pFill').style.transform = 'scaleX(' + ((S.idx + 1) / NQ) + ')';
+  const bo = $('boost'); bo.textContent = q.h ? KEBIASAAN[q.h].boost : BOOST[k]; bo.classList.remove('go'); void bo.offsetWidth; bo.classList.add('go');
+  buzz(18);
+  track('quiz_progress', { soal: S.idx + 1, dari: NQ });
+  setTimeout(() => {
+    S.kunci = false;
+    if (S.idx < NQ - 1) { S.idx++; renderQ(); window.scrollTo({ top: 0 }); try { $('qh').focus({ preventScroll: true }); } catch (e) {} }
+    else hitungLalu();
+  }, 380);
+}
+$('btnBack').onclick = () => { if (S.kunci) return; if (S.idx === 0) show('tebak'); else { S.idx--; renderQ(); } };
+
+// ====== SKOR (tipe: aturan sama dengan /cek-energi: seri → P8, lalu P6, lalu urutan jawaban) ======
+function hitung(j) {
+  const c = { A:0, B:0, C:0, D:0 }; j.forEach(l => c[l]++);
+  const all = ['A','B','C','D'];
+  const seri = cs => { if (cs.length === 1) return cs[0]; if (cs.includes(j[7])) return j[7]; if (cs.includes(j[5])) return j[5]; for (const x of j) if (cs.includes(x)) return x; return cs[0]; };
+  const m = Math.max(...all.map(t => c[t])); const utama = seri(all.filter(t => c[t] === m));
+  const sisa = all.filter(t => t !== utama); const m2 = Math.max(...sisa.map(t => c[t]));
+  const kedua = m2 >= 3 ? seri(sisa.filter(t => c[t] === m2)) : '';
+  return { utama, kedua, skor: c };
+}
+// Skor SMGT Challenge 40-100 (skala 0-100, lantai 40 supaya tidak ada skor yang mempermalukan).
+// Bobot: konsistensi gaya tenaga 34% (seberapa dominan satu tipe di 8 soal), ritme tidur 33%, rutin bergerak 33%.
+// Sebaran pada jawaban acak: se-Kota 8%, se-Indonesia 38%, se-Asia 47%, di Bumi 8%. Gelar puncak butuh tidur & gerak yang baik.
+function skorChallenge(skor, hab) {
+  const dom = Math.max(...Object.values(skor));
+  const dN = Math.min(1, (dom - 2) / 6);   // penuh hanya kalau 8 dari 8 jawaban satu gaya
+  const sN = KEBIASAAN.tidur.opsi[hab.tidur][0] / 3, mN = KEBIASAAN.gerak.opsi[hab.gerak][0] / 3;
+  return Math.round(40 + 60 * (0.15 * dN + 0.425 * sN + 0.425 * mN));
+}
+// Tangga gelar: semua level tetap gelar yang bisa dibanggakan; puncaknya "Pria/Wanita Terkuat di Bumi".
+const LEVELS = [
+  { min:0, suf:'se-Kota', pendek:'Kota', ikon:'ph-buildings', brag:'Satu kota udah lu pegang.', brag1:'Satu kota udah gue pegang.' },
+  { min:55, suf:'se-Indonesia', pendek:'Indonesia', ikon:'ph-flag', brag:'Sabang sampai Merauke, lu yang paling kuat.', brag1:'Sabang sampai Merauke, gue yang paling kuat.' },
+  { min:70, suf:'se-Asia', pendek:'Asia', ikon:'ph-globe-hemisphere-east', brag:'Satu benua udah lu taklukin.', brag1:'Satu benua udah gue taklukin.' },
+  { min:85, suf:'di Bumi', pendek:'Bumi', ikon:'ph-planet', brag:'Puncak tertinggi.' + (CONFIG.creator ? ' Selevel sama ' + CONFIG.creator + '.' : ''), brag1:'Puncak tertinggi.' + (CONFIG.creator ? ' Selevel sama ' + CONFIG.creator + '.' : '') }
+];
+// Komentar Cellos per level. Pria: nantang. Wanita: respectful (memuji & mengakui). Sejajar dengan Cellos hanya di puncak.
+const CELLOS_LEVEL = [
+  g => g === 'wanita'
+    ? 'Start yang mantap. Gue bangga, serius. Langkah berikutnya: se-Indonesia!'
+    : 'Start yang mantap. Sekarang kejar gue, Botak Terkuat di Bumi. Gue tunggu di atas, Brobries!',
+  g => g === 'wanita'
+    ? 'Se-Indonesia udah di tangan. Dikit lagi lu nyusul gue di puncak. Gue tunggu, ya!'
+    : 'Se-Indonesia udah di tangan. Sekarang kalahin gue, Botak Terkuat di Bumi, BOSSS!',
+  g => g === 'wanita'
+    ? 'Se-Asia?! Satu benua udah ngakuin lu. Gue yang Botak Terkuat di Bumi aja angkat topi.'
+    : 'Se-Asia?! Tinggal selangkah ke level gue. Tapi puncak masih punya gue, Brobries.',
+  g => g === 'wanita'
+    ? 'Wanita Terkuat di Bumi. Selevel sama gue, dan jauh lebih kalem. RESPECT!'
+    : 'Ini baru mirip gue. Bedanya, lu nggak perlu botak buat keliatan sangar. RESPECT, BOSSS!'
+];
+// ===== Suara senior (45+): Cellos bicara hormat ke orang tua. =====
+// Teks dasar ditulis gue/lu; untuk senior diubah otomatis jadi saya/Bapak (atau Ibu), kata santai jadi sopan.
+const isSenior = () => S.seg === 'senior';
+const sapa = () => S.gender === 'wanita' ? 'Ibu' : 'Bapak';
+const sapaPendek = () => S.gender === 'wanita' ? 'Bu' : 'Pak';
+function V(s) {
+  if (!isSenior() || !s) return s;
+  const H = sapa(), P = sapaPendek();
+  return String(s)
+    .replace(/\bTemen tongkrongan\b/g, 'Teman dekat').replace(/\btemen tongkrongan\b/g, 'teman dekat')
+    .replace(/\bNi orang\b/g, 'Orang ini')
+    .replace(/\bBROBRIES\b/g, P.toUpperCase()).replace(/\bBrobries\b/g, P)
+    .replace(/\bBOSSS\b/g, (m, i, s) => /[A-Z]{2,}[^A-Za-z]*$/.test(s.slice(0, i)) ? P.toUpperCase() : P)
+    .replace(/nanya "lu kenapa\?"/g, 'bertanya "Ada apa?"')
+    .replace(/\bGUE\b/g, 'SAYA').replace(/\bGue\b/g, 'Saya').replace(/\bgue\b/g, 'saya').replace(/\bgw\b/gi, 'saya')
+    .replace(/\bLU\b/g, H.toUpperCase()).replace(/\bLu\b/g, H).replace(/\blu\b/g, H)
+    .replace(/\bnggak\b/g, 'tidak').replace(/\bNggak\b/g, 'Tidak')
+    .replace(/\budah\b/g, 'sudah').replace(/\bUdah\b/g, 'Sudah')
+    .replace(/\baja\b/g, 'saja').replace(/\btemen\b/g, 'teman').replace(/\bTemen\b/g, 'Teman')
+    .replace(/\bgimana\b/g, 'bagaimana').replace(/\bkayak\b/g, 'seperti').replace(/\bKayak\b/g, 'Seperti')
+    .replace(/\bbikin\b/g, 'membuat').replace(/\bdapet\b/g, 'dapat').replace(/\bsempet\b/g, 'sempat')
+    .replace(new RegExp('yang (paling )?' + H + ' banget', 'g'), 'yang paling menggambarkan ' + H).replace(/\bSaya tantang\b/g, 'Saya ajak').replace(/\bSAYA TANTANG\b/g, 'SAYA AJAK')
+    .replace(/\btemennya\b/g, 'temannya').replace(/\bAbis\b/g, 'Setelah').replace(/\babis\b/g, 'setelah').replace(/\bjelasin\b/g, 'jelaskan').replace(/\btuh\b/g, 'itu')
+    .replace(/\bsebenernya\b/g, 'sebenarnya').replace(/\bbener\b/g, 'benar').replace(/\bPAMERIN\b/g, 'BAGIKAN').replace(/\bPamerin\b/g, 'Bagikan').replace(/\bbagiin\b/g, 'bagikan')
+    .replace(/\bngadepin\b/g, 'menghadapi').replace(/\bngeracik\b/g, 'meracik').replace(/\bDIPERHATIIN\b/g, 'DIPERHATIKAN').replace(/\bGACOR\b/g, 'PRIMA').replace(/\bKenalin\b/g, 'Kenalkan')
+    .replace(new RegExp('Termasuk ' + H + '\\.', 'g'), 'Termasuk Anda.').replace(/Jangan senyum gitu kalau tidak siap saya lanjut\./g, 'Senyumnya bikin saya lupa capek.');
+}
+// Terapkan ke semua teks yang tampil di layar setelah umur diketahui (kuis, hasil, dialog, toast).
+const AREA_SUARA = ['s-tebak', 's-tanya', 's-hitung', 's-hasil', 'namaDlg', 'toast'];
+// Teks asli (gue/lu) disimpan per node, supaya bisa dihitung ulang saat gender/umur berubah (Bapak <-> Ibu, atau balik ke suara santai).
+const ASLI = new WeakMap(), HASIL = new WeakMap();
+function suarakanTeks(n) {
+  if (!ASLI.has(n) || n.nodeValue !== HASIL.get(n)) ASLI.set(n, n.nodeValue);
+  const v = V(ASLI.get(n));
+  HASIL.set(n, v);
+  if (v !== n.nodeValue) n.nodeValue = v;
+}
+function suarakan(node) {
+  if (!node) return;
+  if (node.nodeType === 3) return suarakanTeks(node);
+  const w = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+  let n; while ((n = w.nextNode())) suarakanTeks(n);
+  if (node.querySelectorAll) node.querySelectorAll('input[placeholder]').forEach(i => { if (!i.dataset.asli) i.dataset.asli = i.placeholder; i.placeholder = V(i.dataset.asli); });
+}
+const suarakanSemua = () => AREA_SUARA.forEach(id => suarakan(document.getElementById(id)));
+const mo = new MutationObserver(ms => { ms.forEach(m => { if (m.type === 'characterData') { if (m.target.nodeValue !== HASIL.get(m.target)) suarakanTeks(m.target); } else m.addedNodes.forEach(suarakan); }); });
+AREA_SUARA.forEach(id => { const el = document.getElementById(id); if (el) mo.observe(el, { childList: true, subtree: true, characterData: true }); });
+// Kalimat khusus senior: penyemangat & komentar level ditulis ulang (bukan sekadar diganti kata), supaya tidak sombong ke orang tua.
+// Segmen inti (30-44): lagi prime, kerjaan & pasangan jalan bareng, tapi gampang capek. "Jompo" = musuh, bukan label buat user.
+const isInti = () => S.seg === 'inti';
+const SEMANGAT_INTI = ['Kerjaan bisa nunggu dua menit. Jawab yang beneran lu lakuin. Gue jawab ginian sambil push-up.', 'Santai, Brobries. Ini bukan meeting, nggak ada yang nagih notulen.', 'Jawab dulu, baru gue nilai. Gue kenal juara dari jauh.', 'Soal kebiasaan. Umur lagi prime, jam tidur suka berantakan kan? Jujur aja.', 'Tenaga lu mulai kebaca. Sibuk boleh, loyo jangan, BOSSS.', 'Setengah jalan. Lebih cepet dari nunggu kopi kantor.', 'Empat lagi. Kartu lu mulai panas. Kartu gue? Udah kebakar dari tadi.', 'Soal kebiasaan terakhir. Kerjaan jalan, badan juga harus jalan. Jujur aja, Brobries.', 'Dikit lagi kebuka. Kita lihat lu prime beneran atau udah ngaku jompo.', 'SOAL TERAKHIR. Juara selalu nutup kuat, kayak gue.'];
+const CELLOS_INTI = [
+  g => g === 'wanita'
+    ? 'Kerjaan segunung, masih sempet naik podium. Gue bangga, serius. Next: se-Indonesia!'
+    : 'Umur lagi prime, jangan berhenti di sini. Kejar gue, Brobries!',
+  g => g === 'wanita'
+    ? 'Se-Indonesia udah di tangan. Kerjaan beres, rumah keurus. Dikit lagi lu nyusul gue di puncak!'
+    : 'Se-Indonesia udah di tangan. Kerjaan jalan, pasangan senang. Sekarang kalahin gue, BOSSS!',
+  g => g === 'wanita'
+    ? 'Se-Asia?! Sesibuk itu masih sekuat ini. Gue angkat topi.'
+    : 'Se-Asia?! Sesibuk itu masih kuat segini. Tapi puncak masih punya gue, Brobries.',
+  g => g === 'wanita'
+    ? 'Wanita Terkuat di Bumi. Kerjaan, rumah, pasangan, semua kepegang. RESPECT!'
+    : 'Ini baru mirip gue. Kerjaan beres, pasangan senang, tenaga masih sisa. RESPECT, BOSSS!'
+];
+// Teks statis yang berubah per segmen (story SMGT). Senior tetap lewat lapisan V().
+function terapkanSeg() {
+  const inti = isInti();
+  $('storyNow').textContent = inti ? 'Sekarang? Meeting numpuk, deadline ngejar, pulang udah tepar. Mana sempet ngeracik.' : 'Sekarang? Hidup makin padat, Brobries. Mana sempet ngeracik.';
+  $('storyFor').textContent = inti ? 'Buat lu yang lagi sibuk-sibuknya, tapi masih banyak maunya.' : 'Buat lu yang masih banyak maunya.';
+}
+const SEMANGAT_SENIOR = ['Silakan dijawab sesuai kebiasaan {H}, ya. Santai saja.', 'Tidak ada jawaban yang salah, {P}.', 'Pilihan yang bijak, {P}.', 'Soal kebiasaan. Jawab yang sebenarnya saja, {P}. Tidak ada yang menilai.', 'Mantap, {P}. Tenaga {H} mulai kebaca.', 'Sudah setengah jalan, {P}.', 'Empat lagi, {P}. Kartunya mulai kelihatan.', 'Soal kebiasaan terakhir. Jawab jujur saja, {P}.', 'Sedikit lagi terbuka, {P}.', 'Soal terakhir, {P}. Ini yang paling menentukan.'];
+const CELLOS_SENIOR = [
+  'Awal yang bagus, {P}. Saya hormat. Langkah berikutnya: se-Indonesia.',
+  'Se-Indonesia sudah di tangan {H}. Sedikit lagi menyusul saya di puncak, {P}.',
+  'Se-Asia, {P}! Satu benua sudah mengakui. Saya yang Botak Terkuat di Bumi saja angkat topi.',
+  '{G} Terkuat di Bumi. Selevel sama saya, dan jauh lebih berwibawa. Hormat saya, {P}!'
+];
+const isiSapa = s => s.replace(/\{H\}/g, sapa()).replace(/\{P\}/g, sapaPendek()).replace(/\{G\}/g, gelar());
+const lvIdx = p => LEVELS.reduce((a, l, i) => p >= l.min ? i : a, 0);
+const gelar = g => (g || S.gender) === 'wanita' ? 'Wanita' : 'Pria';
+const level = (p, g) => gelar(g) + ' Terkuat ' + LEVELS[lvIdx(p)].suf;
+
+// ====== INSIGHT & TANTANGAN 7 HARI (gaya hidup, tanpa klaim kesehatan, tidak terkait produk) ======
+const INS_TIPE = {
+  A: { ikon:'ph-lightning', judul:'Tenaga lu: Penggerak', teks:'Lu paling hidup pas jadi yang mulai duluan. Pakai dorongan itu buat satu hal di luar kerjaan yang udah lama lu tunda.' },
+  B: { ikon:'ph-crosshair', judul:'Tenaga lu: Pemikat', teks:'Lu efisien: tahu titiknya, nggak buang tenaga. Fokus kayak gini paling tajam pas kepala nggak lagi penuh urusan kantor.' },
+  C: { ikon:'ph-shield-check', judul:'Tenaga lu: Andalan', teks:'Lu dibikin buat jarak jauh. Orang yang selalu diandelin juga butuh jadwal pulih.' },
+  D: { ikon:'ph-fire', judul:'Tenaga lu: Penghangat', teks:'Lu menang di sabar dan detail. Kehangatan lu paling kerasa pas lu beneran hadir, bukan setengah pikiran di kerjaan.' }
+};
+const INS_TIDUR = [
+  { ikon:'ph-moon-stars', judul:'Tidur lu udah jadi modal', teks:'Ritme kayak gini nggak gampang dijaga, BOSSS. Pertahanin jam yang sama pas weekend juga, biar Senin nggak kerasa kayak hukuman.' },
+  { ikon:'ph-moon-stars', judul:'Tidur lu hampir rapi', teks:'Udah lumayan rutin. Majuin 30 menit selama seminggu, terus rasain sendiri bedanya pas bangun.' },
+  { ikon:'ph-device-mobile', judul:'HP nyolong jam tidur lu', teks:'Scroll "bentar" sering jadi sejam. Taruh HP di luar jangkauan 30 menit sebelum tidur.' },
+  { ikon:'ph-alarm', judul:'Jadwal kerja yang pegang kendali', teks:'Jam tidur susah dikunci? Kunci jam bangunnya. Bangun di jam yang sama tiap hari bikin ritme lebih gampang kebentuk.' }
+];
+const INS_GERAK = [
+  { ikon:'ph-barbell', judul:'Lu udah rutin gerak', teks:'Tantangan lu sekarang: jaga ritmenya. Catat sesi mingguan lu biar polanya nggak putus pas kerjaan numpuk.' },
+  { ikon:'ph-person-simple-run', judul:'Pondasinya udah ada', teks:'Satu sampai dua kali seminggu itu awal yang oke. Tambah satu sesi 20 menit. Nggak harus ke gym.' },
+  { ikon:'ph-sneaker-move', judul:'Jalan kaki itu dihitung', teks:'Tinggal dibikin terjadwal. 20 menit jalan cepat abis makan malam, bisa sambil ngobrol sama pasangan.' },
+  { ikon:'ph-person-simple-walk', judul:'Mulai dari yang paling kecil', teks:'Minggu sibuk itu wajar. Mulai 10 menit aja: push-up, squat, atau jalan cepat.' }
+];
+const TANTANGAN = {
+  gerak: { id:'gerak', judul:'20 menit gerak, 7 hari', teks:'Kebiasaan gerak lu yang paling punya ruang naik.' },
+  tidur: { id:'tidur', judul:'Jam tidur sama, 7 malam', teks:'Ritme tidur lu yang paling punya ruang naik.' },
+  konsisten: { id:'konsisten', judul:'Satu janji kecil, 7 hari', teks:'Tidur dan gerak lu udah oke. Sekarang uji konsistensi.' }
+};
+function pilihTantangan(hab) {
+  const s = KEBIASAAN.tidur.opsi[hab.tidur][0], m = KEBIASAAN.gerak.opsi[hab.gerak][0];
+  if (m < 3 && m <= s) return TANTANGAN.gerak;
+  if (s < 3) return TANTANGAN.tidur;
+  return TANTANGAN.konsisten;
+}
+
+function hitungLalu() {
+  const r = hitung(S.jawab);
+  S.skor = r.skor;
+  S.h = TOKOH.find(t => t.tipe === r.utama && t.gender === S.gender);
+  S.sent = r.kedua ? TOKOH.find(t => t.tipe === r.kedua && t.gender === S.gender) : null;
+  S.pct = skorChallenge(r.skor, S.hab);
+  S.chal = pilihTantangan(S.hab);
+  track('quiz_complete', { tokoh: S.h.id, tipe: TIPE[S.h.tipe], skor: S.pct, gelar: level(S.pct), tantangan: S.chal.id, dari_tantangan: !!dari });
+  show('hitung');
+  const lines = ['Gue lagi baca gaya tenaga lu', 'Ngecek jam tidur lu', 'Ngecek kebiasaan gerak lu', 'Ngitung skor. Jangan ngintip.', 'Kartu lu kebuka. Siap-siap!'];
+  let p = 0; const rt = $('ringTxt'), ct = $('calcTxt');
+  const iv = setInterval(() => {
+    p = Math.min(100, p + 3 + Math.random() * 4);
+    rt.textContent = Math.round(p) + '%';
+    ct.textContent = lines[Math.min(lines.length - 1, Math.floor(p / 21))];
+    if (p >= 100) { clearInterval(iv); setTimeout(renderHasil, 250); }
+  }, 60);
+}
+
+// ====== HASIL ======
+function saring(raw) {
+  const t = String(raw || '').replace(/[^A-Za-zÀ-ɏ' -]/g, '').replace(/\s+/g, ' ').trim();
+  if (!t) return { nama:'', alasan:'' };
+  if (t.length > 14) return { nama:'', alasan:'Maksimal 14 karakter.' };
+  const low = t.toLowerCase();
+  const BLOK = ['anjing','bangsat','babi','kontol','memek','ngentot','bego','goblok','tolol','jancok','jancuk','asu','kampret','tai','pepek','bajingan','setan','iblis','jokowi','prabowo','gibran','megawati','anies','ganjar','sby','ahok','luhut','raffi','nagita','cellos','ridwan kamil'];
+  for (const b of BLOK) if (low === b || low.split(' ').includes(b) || (b.length >= 5 && low.includes(b))) return { nama:'', alasan:'Pakai nama panggilan lu sendiri, BOSSS.' };
+  return { nama:t, alasan:'' };
+}
+const kecil = t => t ? t.charAt(0).toLowerCase() + t.slice(1) : t;
+
+function renderHasil() {
+  const h = S.h;
+  $('flip').classList.remove('open'); $('after').classList.remove('on');
+  $('vsTxt').textContent = '';   // jangan tampilkan komentar Cellos dari hasil sebelumnya
+  $('front').className = 'face front t' + h.tipe; $('front').setAttribute('aria-hidden', 'true');
+  $('fImg').style.display = ''; $('fImg').src = ILUS(h.id); $('fImg').onerror = function () { this.style.display = 'none'; };
+  $('fNama').textContent = h.nama.toUpperCase();
+  $('fJul').textContent = h.julukan;
+  $('fKartu').textContent = h.kartu;
+  $('nama').value = S.nama; namaUpdate();
+  $('btnFlip').tabIndex = 0;
+  show('hasil');
+}
+$('btnFlip').onclick = () => {
+  if (!S.h || $('flip').classList.contains('open')) return;
+  $('flip').classList.add('open'); $('front').setAttribute('aria-hidden', 'false'); $('btnFlip').tabIndex = -1;
+  buzz([20, 40, 30]);
+  track('card_open', { tokoh: S.h.id, skor: S.pct });
+  setTimeout(() => { isiDetail(); renderExtra(); const y0 = $('flip').getBoundingClientRect().top; $('after').classList.add('on'); document.body.classList.remove('kartu-tutup'); const dy = y0 - $('flip').getBoundingClientRect().top; if (dy && !matchMedia('(prefers-reduced-motion: reduce)').matches) $('s-hasil').animate([{ transform: 'translateY(' + dy + 'px)' }, { transform: 'none' }], { duration: 450, easing: 'cubic-bezier(.16,1,.3,1)' }); animPct(); siapkanKartu(); }, 750);
+};
+// Tips dari Cellos. CATATAN: teks ini ditulis atas nama kreator; minta persetujuan Cellos sebelum tayang.
+// Ditulis sebagai ucapan Cellos (collab resmi, Voice V3). Self-roast hanya ke Cellos sendiri. Perlu review tim Cellos sebelum tayang.
+const TIPS = {
+  pria: [
+    { k:'gerak', judul:'Kuat itu hasil latihan.', teks:'Gue juga nggak lahir langsung jadi Botak Terkuat di Bumi, Brobries. Push-up, squat, plank, 20 menit di rumah. Yang bikin kuat itu rutinnya. Beban berat bisa nyusul.' },
+    { k:'tidur', judul:'Tidur itu bagian dari latihan.', teks:'Begadang terus bikin lu loyo besoknya. Gue kalau kurang tidur, berubah jadi Botak Terngantuk di Bumi. Kunci jam tidur, HP jauh-jauh.' },
+    { k:'makan', judul:'Isi bensinnya yang bener.', teks:'Telur, ikan, tempe. Tiap makan ada proteinnya, air putih lebih sering dari kopi. Tinggal jangan kayak gue, milih menu aja 20 menit.' },
+    { k:'kepala', judul:'Tangguh itu soal kepala juga.', teks:'Kerjaan, cicilan, macet, semua numpuk. Cerita ke pasangan atau temen itu justru tanda kuat. Gue aja kalau galau langsung curhat.' },
+    { k:'konsisten', judul:'Jangan nunggu semangat.', teks:'Semangat dateng dan pergi. Kebiasaan yang bikin lu tetap jalan. Mulai kecil, ulang tiap hari.' },
+    { k:'pasangan', judul:'Kuat di rumah juga dihitung.', teks:'Pulang kerja, taruh HP 30 menit, beneran ngobrol sama pasangan. Pria Terkuat di Bumi juga jago hadir di rumah.' }
+  ],
+  wanita: [
+    { k:'gerak', judul:'Mulai latihan otot dari rumah.', teks:'Squat, lunges, push-up di dinding. 20 menit di rumah udah cukup buat mulai. Wanita Terkuat di Bumi nggak nunggu jadwal gym kosong, Brobries.' },
+    { k:'tidur', judul:'Tidur duluan itu boleh.', teks:'Lu nggak harus beresin semuanya dulu baru boleh tidur. Kunci jam tidur lu. Sisanya biar besok, termasuk chat grup yang rame.' },
+    { k:'makan', judul:'Jangan cuma ngasih makan orang lain.', teks:'Sibuk ngurusin semua orang sampai lupa makan sendiri? Sarapan, protein, air putih. Gue aja yang Botak Terkuat di Bumi, telat makan langsung lemes.' },
+    { k:'kepala', judul:'Berani bilang "nggak".', teks:'Bilang "nggak" ke hal yang nguras, tanpa rasa bersalah.' },
+    { k:'konsisten', judul:'Waktu buat diri sendiri itu wajib.', teks:'Lima belas menit sehari yang beneran punya lu: jalan sore, baca, atau diem bentar. Anggap aja ngecas.' },
+    { k:'pasangan', judul:'Kuat berdua lebih seru.', teks:'Ajak pasangan ikut Challenge 7 Hari bareng. Saling ngingetin jauh lebih gampang daripada jalan sendirian. Pasangan Terkuat di Bumi, gas!' }
+  ]
+};
+function renderTips() {
+  const g = S.gender === 'wanita' ? 'wanita' : 'pria';
+  const fokus = S.chal ? S.chal.id : 'konsisten';
+  const list = TIPS[g].slice().sort((a, b) => (b.k === fokus) - (a.k === fokus));
+  const C = CONFIG.creator;
+  $('tipsBy').textContent = C ? 'Tips dari ' + C : 'Tips harian';
+  $('tipsBySub').textContent = C ? CONFIG.creatorTitle : '';
+  if (CONFIG.creatorFoto) $('tipsAva').innerHTML = '<img src="' + esc(CONFIG.creatorFoto) + '" alt="' + esc(C) + '">';
+  $('h-tips').textContent = 'Cara jadi ' + gelar() + ' Terkuat di Bumi versi gue';
+  $('tipsIntro').textContent = 'Gue bocorin enam jurus. Yang paling pas buat lu, gue taruh paling depan.';
+  $('tips').innerHTML = list.map((x, i) => `<article class="tip ${i === 0 ? 'pas' : ''}">
+      ${i === 0 ? '<span class="pas-tag"><i class="ph-bold ph-target"></i>Paling pas buat lu</span>' : ''}
+      <span class="no">${String(i + 1).padStart(2, '0')}</span><b>${esc(x.judul)}</b><p>${esc(x.teks)}</p></article>`).join('');
+  $('tips').scrollLeft = 0;
+  $('tipsSign').innerHTML = C ? '“STAY SANE, STAY HEALTHY, BROBRIES!”<br><small class="note" style="font-family:Poppins,sans-serif;font-style:normal">' + esc(C) + ', ' + esc(CONFIG.creatorTitle) + '</small>' : '';
+}
+function renderExtra() {
+  $('moreJudul').textContent = 'Kenalan lebih dalam sama ' + S.h.nama;
+  $('moreTokoh').open = false;
+  S.misiSemua = false;
+  renderTips();
+  renderSmgt();
+  renderChallenge();
+  const ins = [INS_TIPE[S.h.tipe], INS_TIDUR[S.hab.tidur], INS_GERAK[S.hab.gerak]];
+  $('insights').innerHTML = ins.map(x => `<li><i class="ph-bold ${x.ikon}" aria-hidden="true"></i><div><b>${esc(x.judul)}</b><p>${esc(x.teks)}</p></div></li>`).join('');
+}
+// Challenge 7 Hari = lead magnet (isi misi dari funnel "Pria Terkuat di Bumi").
+const MISI = [
+  { k:'tidur', ikon:'ph-moon-stars', judul:'Tidur', teks:'Jam tidur tetap. HP jauh-jauh 30 menit sebelum tidur.' },
+  { k:'pagi', ikon:'ph-sun-horizon', judul:'Menang di 60 menit pertama', teks:'1-2 gelas air, kena matahari pagi, 15 menit pertama tanpa HP.' },
+  { k:'makan', ikon:'ph-bowl-food', judul:'Bahan bakar', teks:'Tiap piring ada proteinnya: telur, tempe, ikan, ayam.' },
+  { k:'gerak', ikon:'ph-sneaker-move', judul:'Jalan kaki', teks:'Total 20-30 menit jalan hari ini. Boleh dicicil.' },
+  { k:'kuat', ikon:'ph-barbell', judul:'Kekuatan dasar', teks:'Push-up, squat, plank. 10 menit, 3 putaran. Catat push-up lu.' },
+  { k:'kepala', ikon:'ph-brain', judul:'Kepala dingin', teks:'5 menit napas kotak, plus satu obrolan jujur.' },
+  { k:'ulang', ikon:'ph-trophy', judul:'Tes ulang', teks:'Isi ulang kuis ini. Bandingin skor dan push-up Hari 5.' }
+];
+const FOKUS_HARI = { tidur: 0, gerak: 3, konsisten: 4 };
+$('qsShare').addEventListener('click', () => { track('share_cta_atas', { metode: 'bagikan' }); $('btnShareImg').click(); });
+$('qsWa').addEventListener('click', () => { track('share_cta_atas', { metode: 'whatsapp' }); $('btnWa').click(); });
+$('moreTokoh').addEventListener('toggle', () => { if ($('moreTokoh').open) track('detail_open', { tokoh: S.h ? S.h.id : '' }); });
+$('misToggle').addEventListener('click', () => { S.misiSemua = true; track('misi_lihat_semua', {}); renderChallenge(); });
+function renderChallenge() {
+  const li = lvIdx(S.pct), fi = FOKUS_HARI[S.chal.id];
+  $('chalTitle').textContent = 'Challenge 7 Hari ' + gelar() + ' Terkuat';
+  const kata = li === 3 ? 'Lu udah di puncak. Tujuh hari ini buat jaga gelar.' : li === 2 ? 'Tinggal selangkah ke puncak.' : 'Modalnya udah ada. Tujuh hari ini buat ngejar gelar berikutnya.';
+  $('chalIntro').innerHTML = 'Skor lu <b>' + S.pct + '</b>. ' + esc(kata) + ' Gabung 7 hari bareng ' + esc(CONFIG.creator || 'kami') + '.';
+  let d = [];
+  try { d = JSON.parse(localStorage.getItem('smgt7-misi') || '[]') || []; } catch (e) {}
+  const tampil = new Set([0, fi]);   // Hari 1 + hari fokus; sisanya di "Lihat semua 7 misi"
+  $('mis').classList.toggle('semua', !!S.misiSemua);
+  $('misToggle').classList.toggle('hide', !!S.misiSemua);
+  $('mis').innerHTML = MISI.map((m, i) => `<li class="${i === fi ? 'f' : ''} ${tampil.has(i) ? '' : 'lain'}"><span class="d"><i class="ph-bold ${m.ikon}"></i></span>
+      <div><b>Hari ${i + 1}: ${esc(m.judul)}${i === fi ? '<span class="fokus">Fokus lu</span>' : ''}</b><small>${esc(m.teks)}</small></div>
+      <button type="button" class="tick" data-i="${i}" aria-pressed="${!!d[i]}" aria-label="Tandai Hari ${i + 1} selesai"><i class="ph-bold ph-check"></i></button></li>`).join('');
+  const n = d.filter(Boolean).length;
+  $('chalNote').textContent = n === 7 ? 'Tujuh hari beres. ITU BARU TANGGUH.' : n ? n + ' dari 7 misi beres. Lanjut besok.' : 'Hari ' + (fi + 1) + ' paling nyambung sama hasil lu. Centang misi yang udah lu jalanin.';
+  $('mis').querySelectorAll('.tick').forEach(btn => btn.onclick = () => {
+    const i = +btn.dataset.i; d[i] = !d[i];
+    try { localStorage.setItem('smgt7-misi', JSON.stringify(d)); } catch (e) {}
+    if (d[i]) track('habit_check', { hari: i + 1, misi: MISI[i].k });
+    renderChallenge();
+  });
+  if (!$('leadNama').value) $('leadNama').value = saring(S.nama).nama;
+  sudahDaftar();
+}
+// ---- Form lead ----
+const normWa = v => { let x = String(v || '').replace(/[^0-9+]/g, ''); if (x.startsWith('+')) x = x.slice(1); if (x.startsWith('0')) x = '62' + x.slice(1); return x; };
+const waValid = x => /^628[0-9]{7,12}$/.test(x);
+const emailValid = x => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(x);
+function sudahDaftar() {
+  let ok = false; try { ok = localStorage.getItem('smgt-lead') === '1'; } catch (e) {}
+  $('leadForm').classList.toggle('hide', ok); $('leadOkBox').classList.toggle('hide', !ok);
+  if (ok) {
+    $('leadOkTxt').textContent = 'Masuk ke platform pakai email tadi. Batch berikutnya mulai ' + CONFIG.lead.batchMulai + ', tapi misi Hari 1 udah bisa lu buka sekarang.';
+    $('leadGrup').href = CONFIG.lead.platformUrl;
+  }
+}
+let leadMulai = false;
+['leadNama', 'leadEmail', 'leadWa'].forEach(id => $(id).addEventListener('focus', () => { if (!leadMulai) { leadMulai = true; track('lead_start', { skor: S.pct, gender: S.gender }); } }));
+$('leadForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const nama = saring($('leadNama').value).nama, email = $('leadEmail').value.trim().toLowerCase(), waRaw = $('leadWa').value.trim(), wa = waRaw ? normWa(waRaw) : '';
+  const err = !nama ? 'Isi nama panggilan lu (huruf aja, maksimal 14).' : !emailValid(email) ? 'Email belum valid. Contoh: nama@email.com.' : (wa && !waValid(wa)) ? 'Nomor WhatsApp belum valid, atau kosongin aja. Contoh: 0812 3456 7890.' : !$('leadOk').checked ? 'Centang persetujuan dulu, ya.' : '';
+  $('leadErr').textContent = err;
+  if (err) return;
+  $('leadBtn').disabled = true;
+  // Data pribadi (nama & nomor) hanya dikirim ke endpoint lead, tidak pernah ke analytics.
+  const data = { nama, email, wa: wa || null, gender: S.gender, tokoh: S.h.id, skor: S.pct, gelar: level(S.pct), fokus: MISI[FOKUS_HARI[S.chal.id]].k, dari_tantangan: dari || null, persetujuan: true, sumber: 'smgt_challenge_quiz', ts: new Date().toISOString() };
+  let terkirim = false;
+  if (CONFIG.lead.endpoint) {
+    try { const r = await fetch(CONFIG.lead.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data), keepalive: true }); terkirim = r.ok; } catch (e2) {}
+    if (!terkirim) { $('leadBtn').disabled = false; $('leadErr').textContent = 'Waduh, datanya belum kekirim, Brobries. Cek koneksi, terus coba lagi ya.'; track('lead_error', {}); return; }
+  } else if (DEBUG) console.info('[mode uji] lead tidak dikirim, isi CONFIG.lead.endpoint', data);
+  try { localStorage.setItem('smgt-lead', '1'); } catch (e3) {}
+  track('lead_submit', { ada_wa: !!wa, skor: S.pct, gender: S.gender, tokoh: S.h.id, fokus: data.fokus, dari_tantangan: !!dari, endpoint: !!CONFIG.lead.endpoint });
+  $('leadBtn').disabled = false;
+  sudahDaftar();
+});
+$('leadGrup').addEventListener('click', () => track('platform_open', { gender: S.gender }));
+// ---- Kenalan sama SMGT! (judul ikut gender) ----
+const MANFAAT = [
+  { ikon:'ph-lightning', teks:'Membantu meningkatkan energi dan stamina', bahan:'Ginseng, madu, malt, oat' },
+  { ikon:'ph-heartbeat', teks:'Membantu menjaga vitalitas', bahan:'Ginseng, guarana' },
+  { ikon:'ph-drop', teks:'Membantu melancarkan peredaran darah', bahan:'L-arginin' },
+  { ikon:'ph-smiley', teks:'Membantu menjaga mood dan semangat', bahan:'Guarana' },
+  { ikon:'ph-atom', teks:'Membantu mencukupi mineral harian', bahan:'Biji semangka' },
+  { ikon:'ph-wind', teks:'Membantu menghadapi stres', bahan:'Ginseng' }
+];
+function renderGift() {
+  const W = S.gender === "wanita";
+  $("gift").classList.toggle("hide", !W);
+  if (!W) return;
+  const p = S.pas ? byId[S.pas] : null;
+  $("giftTxt").innerHTML = (p ? "<span class=\"duo\">" + esc(S.h.nama) + " + " + esc(p.nama) + "</span>, calon Pasangan Terkuat di Bumi. " : "") +
+    "Dia kerja keras, lu juga. Segelas SMGT! hangat berdua di malam hari, biar kalian jadi <b style=\"font:inherit;display:inline;text-transform:none;color:var(--tx)\">Pasangan Terkuat di Bumi</b>.";
+  $("giftBtn").href = CONFIG.produk.beli;
+}
+$("giftBtn").addEventListener("click", () => track("offer_click", { jenis: "hadiah_pasangan", label: "beliin_pasangan", tokoh: S.h ? S.h.id : "", pasangan: S.pas || "", skor: S.pct, gender: S.gender }));
+function renderSmgt() {
+  renderGift();
+  $('benefit').innerHTML = MANFAAT.map(m => `<div><i class="ph-bold ${m.ikon}" aria-hidden="true"></i><b>${esc(m.teks)}</b><span>${esc(m.bahan)}</span></div>`).join('');
+}
+function animPct() {
+  let v = 0; const el = $('pct'), tgt = S.pct, li = lvIdx(tgt);
+  const iv = setInterval(() => { v += Math.max(1, Math.round((tgt - v) / 8)); if (v >= tgt) { v = tgt; clearInterval(iv); } el.textContent = v; }, 28);
+  $('lvA').textContent = gelar() + ' Terkuat';
+  $('lvB').textContent = LEVELS[li].suf;
+  $('lvBrag').textContent = LEVELS[li].brag;
+  $('vsCellos').classList.toggle('hide', !CONFIG.creator);
+  $('vsTxt').textContent = isSenior() ? isiSapa(CELLOS_SENIOR[li]) : (isInti() ? CELLOS_INTI : CELLOS_LEVEL)[li](S.gender);
+  if (CONFIG.creatorFoto && !$('vsAva').querySelector('img')) $('vsAva').innerHTML = '<img src="' + esc(CONFIG.creatorFoto) + '" alt="">';
+  $('ladder').setAttribute('aria-label', 'Level ' + (li + 1) + ' dari 4: ' + level(tgt));
+  $('ladder').innerHTML = '<i class="prog"></i>' + LEVELS.map((l, i) => `<div class="rung ${i < li ? 'done' : i === li ? 'now' : ''}"><span><i class="ph-bold ${i > li ? 'ph-lock-simple' : l.ikon}"></i></span><small>${l.pendek}</small></div>`).join('');
+  requestAnimationFrame(() => requestAnimationFrame(() => { $('ladder').querySelector('.prog').style.width = (li / 3 * 75) + '%'; }));
+  $('lvNext').textContent = li === 3
+    ? 'Lu di puncak. Kirim ke circle lu, siapa yang bisa nyamain?'
+    : 'Puncaknya ' + gelar() + ' Terkuat di Bumi. Kirim ke circle lu, siapa yang bisa nyamain lu?';
+}
+function isiDetail() {
+  const h = S.h, sk = S.skor, j = S.jawab, nm = saring(S.nama).nama;
+  $('hSatu').textContent = '“' + h.satu + '”';
+  let menonjol = '';
+  for (const qi of [7,5,2,0,1,3,4,6]) if (j[qi] === h.tipe) { menonjol = OPSI[qi].find(x => x[0] === h.tipe)[1]; break; }
+  const kal = h.profil.split('. '); const first = kal[0], rest = kal.slice(1).join('. ');
+  $('hProfil').textContent = (nm ? nm + ', ' + kecil(first) : first) + '.' + (menonjol ? ' ' + MENONJOL[h.tipe] + '"' + menonjol.replace(/^"|"$/g, '').replace(/[.!?]+$/, '') + '".' : '') + (rest ? ' ' + rest : '');
+  $('hSisi').textContent = S.sent ? 'Di balik ' + SIFAT[h.tipe] + ' ' + h.nama + ', ada sentuhan ' + S.sent.nama + ': ' + SISI[S.sent.tipe] + '.' : '';
+  $('hSisi').classList.toggle('hide', !S.sent);
+  $('hVs').innerHTML = CONFIG.creator && h.vsCellos ? '<b>' + esc(CONFIG.creator) + ':</b> ' + esc(h.vsCellos) : '';
+  const kom = ['A','B','C','D'].map(t => ({ t, n: sk[t] })).sort((a, b) => b.n - a.n || a.t.localeCompare(b.t));
+  $('bars').innerHTML = kom.map(k => `<div class="${k.t === h.tipe ? 'u' : ''}"><b>${k.n}</b><small>${TIPE[k.t]}</small><i data-w="${k.n / 8 * 100}"></i></div>`).join('');
+  requestAnimationFrame(() => requestAnimationFrame(() => $('bars').querySelectorAll('i').forEach(i => i.style.width = i.dataset.w + '%')));
+  $('kenapa').textContent = sk[h.tipe] + ' dari 8 jawaban lu bertipe ' + TIPE[h.tipe] + (S.sent ? ', ' + sk[S.sent.tipe] + ' bertipe ' + TIPE[S.sent.tipe] + '.' : '.');
+  $('kekuatan').innerHTML = h.kekuatan.map(k => '<li><span>' + esc(k) + '</span></li>').join('');
+  $('hLuar').textContent = h.luar; $('hBerdua').textContent = h.berdua;
+  $('hBilang').textContent = '“' + h.bilang + '”'; $('hCatatan').textContent = h.catatan || '';
+  $('klop').innerHTML = h.klop.map(k => { const t = byId[k[0]]; return `<div class="kc"><img src="${POTRET(t.id)}" alt="" loading="lazy" onerror="this.remove()"><span class="ov"></span><span class="tx"><b>${t.nama.toUpperCase()}</b><small>${esc(k[1])}</small></span></div>`; }).join('');
+  $('hJaga').textContent = h.jaga;
+  // tebakan
+  let v = '';
+  if (S.tebak) {
+    const t = byId[S.tebak];
+    if (t.id === h.id) v = `<div class="verdict"><i class="ph-bold ph-target"></i><span><b>Tebakan lu tepat: ${t.nama}.</b> Lencana "Kenal Diri Sendiri" kebuka.</span></div>`;
+    else if (S.sent && t.id === S.sent.id) v = `<div class="verdict"><i class="ph-bold ph-target"></i><span>Hampir. Lu nebak <b>${t.nama}</b>, itu sisi lain lu. Tokoh utama lu <b>${h.nama}</b>.</span></div>`;
+    else v = `<div class="verdict"><i class="ph-bold ph-target"></i><span>Lu nebak <b>${t.nama}</b>. Meleset, dan justru itu serunya: ternyata lu <b>${h.nama}</b>.</span></div>`;
+  }
+  $('verdictBox').innerHTML = v;
+  // duel dengan teman yang mengirim tautan
+  if (dari && dariSkor) {
+    const pn = esc(saring(dariNama).nama || 'Temen lu');
+    const d = S.pct - dariSkor;
+    const ket = d > 0 ? `Lu unggul ${d} poin dari ${pn}. Kirim kartu lu, ajak dia tanding ulang.` : d < 0 ? `${pn} unggul ${-d} poin. Gelar lu tetap ${level(S.pct)}. Ajak dia tanding ulang!` : 'Seri. Cari temen ketiga buat jadi penentu.';
+    $('duelBox').innerHTML = `<div class="duel"><div class="side"><b class="gold">${S.pct}</b><small>Lu</small></div><span class="vs">VS</span><div class="side"><b>${dariSkor}</b><small>${pn}</small></div><p class="duel-v">${ket}</p></div>`;
+  } else $('duelBox').innerHTML = '';
+  if (dari && byId[dari].gender !== h.gender && !S.pas) S.pas = dari;
+  renderPas();
+}
+function renderPas() {
+  const h = S.h; const opp = TOKOH.filter(t => t.gender !== h.gender);
+  $('chipsPas').innerHTML = opp.map(t => `<button type="button" class="chip" data-id="${t.id}" aria-pressed="${S.pas === t.id}">${t.nama}</button>`).join('');
+  $('chipsPas').querySelectorAll('.chip').forEach(b => b.onclick = () => { S.pas = S.pas === b.dataset.id ? '' : b.dataset.id; renderPas(); });
+  const p = S.pas ? byId[S.pas] : null;
+  $('kombi').classList.toggle('hide', !p);
+  if (p) {
+    const pr = h.gender === 'pria' ? h : p, wn = h.gender === 'pria' ? p : h;
+    const nm = saring(S.nama).nama, pn = saring(dariNama).nama;
+    $('kombiNama').textContent = (nm || h.nama) + ' + ' + (S.pas === dari && pn ? pn : p.nama);
+    $('kombiTxt').textContent = KOMBI[pr.tipe + wn.tipe];
+  }
+  const inv = $('invited');
+  if (dari && byId[dari].gender !== h.gender) { inv.classList.remove('hide'); inv.textContent = (saring(dariNama).nama || 'Pasangan lu') + ' yang ngirim tes ini dapet ' + byId[dari].nama + '. Kombinasi kalian udah kebuka.'; }
+  else inv.classList.add('hide');
+  renderGift();
+}
+
+// ====== NAMA & BAGIKAN ======
+let tNama = null;
+function namaUpdate() {
+  const r = saring($('nama').value); S.nama = $('nama').value;
+  $('namaNote').textContent = r.alasan; $('namaNote').classList.toggle('err', !!r.alasan);
+  $('fKamu').textContent = r.nama ? r.nama + ' adalah' : 'Lu adalah';
+  $('resmiTxt').textContent = r.nama ? r.nama + ' resmi jadi' : 'Lu resmi jadi';
+  if ($('after').classList.contains('on')) { isiDetail(); clearTimeout(tNama); tNama = setTimeout(siapkanKartu, 450); }
+}
+$('nama').addEventListener('input', namaUpdate);
+
+const linkTantang = () => { const nm = saring(S.nama).nama; return BASE + '?dari=' + S.h.id + '&s=' + S.pct + (nm ? '&nama=' + encodeURIComponent(nm) : ''); };
+const caption = () => {
+  const nm = saring(S.nama).nama;
+  if (isSenior()) return (nm ? nm + ' resmi jadi ' : 'Saya resmi jadi ') + level(S.pct) + '. Skor ' + CONFIG.brand + ' Challenge: ' + S.pct + '/100. Tokoh: ' + S.h.nama + '. Coba juga, bisa menyamai? ';
+  return (nm ? nm + ' resmi jadi ' : 'Gue resmi jadi ') + level(S.pct).toUpperCase() + ' 💪 Skor ' + CONFIG.brand + ' Challenge: ' + S.pct + '/100. Tokoh: ' + S.h.nama + '. Hasil gue udah keluar. EMANG LU BISA NYAMAIN?! ';
+};
+const catatShare = metode => { track('share', { metode, tokoh: S.h.id, skor: S.pct }); track('challenge_link_create', { metode }); };
+const wa = t => 'https://wa.me/?text=' + encodeURIComponent(t);
+$('btnWa').onclick = () => { catatShare('whatsapp'); window.open(wa(caption() + linkTantang()), '_blank', 'noopener'); };
+$('btnPas').onclick = () => {
+  catatShare('pasangan');
+  const t = isSenior() ? 'Saya resmi jadi ' + level(S.pct) + ' (' + S.h.nama + '), skor ' + CONFIG.brand + ' Challenge ' + S.pct + '/100. Sekarang giliranmu. Setelah itu kita lihat kombinasi kita: ' + linkTantang() : 'Gue resmi jadi ' + level(S.pct) + ' (' + S.h.nama + '), skor ' + CONFIG.brand + ' Challenge ' + S.pct + '/100. Sekarang giliran lu. Abis itu kita lihat kombinasi kita: ' + linkTantang();
+  if (navigator.share) navigator.share({ text: t }).catch(() => {}); else window.open(wa(t), '_blank', 'noopener');
+};
+$('btnCopy').onclick = () => {
+  catatShare('salin_link');
+  const t = caption() + linkTantang();
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => toast('Caption dan link tersalin. Tinggal tempel.'), () => toast('Salin manual: ' + BASE_SHORT));
+};
+
+// ---- Kartu Story PNG 1080x1920 (IG/TikTok Story, status WA). Gelar jadi bintang utamanya. ----
+const loadImg = src => new Promise(res => { const i = new Image(); i.crossOrigin = 'anonymous'; let done = false; const f = v => { if (!done) { done = true; res(v); } }; i.onload = () => f(i); i.onerror = () => f(null); setTimeout(() => f(null), 4000); i.src = src; });
+const imgCache = {};
+async function buatKartu(o) {
+  o = o || {};
+  const h = o.h || S.h, nm = o.nama !== undefined ? o.nama : saring(S.nama).nama, pct = o.pct || S.pct, gnd = o.gender || S.gender, li = lvIdx(pct), L = LEVELS[li];
+  try { await document.fonts.ready; } catch (e) {}
+  const W = { A:['#791010','#FFF8EC','#FCEA94'], B:['#1B1412','#FFF8EC','#FCEA94'], C:['#F3ECDF','#221B17','#791010'], D:['#FCEA94','#221B17','#791010'] }[h.tipe];
+  const gelap = h.tipe === 'A' || h.tipe === 'B';
+  const c = document.createElement('canvas'); c.width = 1080; c.height = 1920; const g = c.getContext('2d');
+  const emas = (y0, y1) => { const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, '#FFF7CF'); gr.addColorStop(.45, '#FCEA94'); gr.addColorStop(1, '#C9A227'); return gr; };
+  const latar = () => {
+    g.fillStyle = W[0]; g.fillRect(0, 0, 1080, 1920);
+    g.save(); g.globalAlpha = gelap ? .1 : .07; g.fillStyle = gelap ? '#FCEA94' : '#791010'; g.translate(540, 560);
+    for (let i = 0; i < 18; i++) { g.rotate(Math.PI / 9); g.beginPath(); g.moveTo(0, 0); g.lineTo(-80, -1100); g.lineTo(80, -1100); g.closePath(); g.fill(); }
+    g.restore();
+    const rg = g.createRadialGradient(540, 560, 20, 540, 560, 520); rg.addColorStop(0, gelap ? 'rgba(252,234,148,.42)' : 'rgba(121,16,16,.2)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = rg; g.fillRect(0, 0, 1080, 1920);
+  };
+  latar();
+  const src = ILUS(h.id);
+  const img = imgCache[src] !== undefined ? imgCache[src] : (imgCache[src] = await loadImg(src));
+  let ok = false;
+  if (img) {
+    g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 48; g.shadowOffsetY = 22; g.drawImage(img, -150, 150, 1380, 1380); g.restore();
+    try { g.getImageData(0, 0, 1, 1); ok = true; } catch (e) {}
+  }
+  if (!ok) { latar(); g.fillStyle = W[2]; g.font = '400 420px Anton, Impact, sans-serif'; g.textAlign = 'center'; g.globalAlpha = .14; g.fillText(h.nama.charAt(0), 540, 820); g.globalAlpha = 1; }
+  const fg = g.createLinearGradient(0, 760, 0, 1120); fg.addColorStop(0, W[0] + '00'); fg.addColorStop(.55, W[0] + 'D8'); fg.addColorStop(1, W[0]); g.fillStyle = fg; g.fillRect(0, 760, 1080, 1160);
+  g.strokeStyle = W[2]; g.globalAlpha = .55; g.lineWidth = 3; g.strokeRect(36, 36, 1008, 1848); g.globalAlpha = 1;
+  // atas: brand + tokoh
+  g.textAlign = 'left'; g.fillStyle = W[1]; g.font = '400 50px Anton, Impact, sans-serif'; g.fillText(CONFIG.brand + ' CHALLENGE', 84, 150);
+  g.font = '600 26px Poppins, sans-serif'; g.globalAlpha = .85; g.fillText(isSenior() ? 'Seberapa tangguh Anda?' : 'Seberapa tangguh lu?!', 84, 190); g.globalAlpha = 1;
+  g.textAlign = 'right'; g.fillStyle = W[2]; g.font = '400 50px Anton, Impact, sans-serif'; g.fillText(h.nama.toUpperCase(), 996, 150);
+  g.font = 'italic 400 34px "Instrument Serif", Georgia, serif'; g.fillText(h.julukan, 996, 190);
+  // menang duel: pita kecil
+  if (!o.contoh && dari && dariSkor && pct > dariSkor) {
+    const pn = saring(dariNama).nama || 'temen gue';
+    const t = 'Baru ngalahin ' + pn + ' (' + pct + ' vs ' + dariSkor + ')';
+    g.font = '700 28px Poppins, sans-serif'; const tw = g.measureText(t).width;
+    g.fillStyle = '#C42222'; g.beginPath(); g.roundRect(84, 226, tw + 48, 56, 28); g.fill();
+    g.fillStyle = '#FFF8EC'; g.textAlign = 'left'; g.fillText(t, 108, 264);
+  }
+  // gelar
+  g.textAlign = 'center';
+  g.save(); g.shadowColor = gelap ? 'rgba(0,0,0,.55)' : 'rgba(255,255,255,.85)'; g.shadowBlur = 16;
+  g.fillStyle = W[2]; g.font = '600 42px Poppins, sans-serif'; g.fillText(nm ? nm + ' resmi jadi' : V('Gue resmi jadi'), 540, 1050);
+  const fit = (t, size) => { let s = size; g.font = '400 ' + s + 'px Anton, Impact, sans-serif'; while (g.measureText(t).width > 940 && s > 60) { s -= 4; g.font = '400 ' + s + 'px Anton, Impact, sans-serif'; } return s; };
+  const l1 = (gelar(gnd) + ' Terkuat').toUpperCase(), l2 = L.suf.toUpperCase();
+  const s1 = fit(l1, 156); g.fillStyle = W[1]; g.fillText(l1, 540, 1200);
+  const s2 = fit(l2, Math.max(s1, 156)); g.fillStyle = gelap ? emas(1210, 1350) : W[2]; g.fillText(l2, 540, 1200 + s2 * .98);
+  g.restore();
+  g.fillStyle = W[1]; g.font = '600 34px Poppins, sans-serif'; g.fillText(V(L.brag1), 540, 1430);
+  // tangga level
+  const xs = [234, 438, 642, 846], ly = 1530;
+  g.strokeStyle = W[1]; g.globalAlpha = .25; g.lineWidth = 4; g.beginPath(); g.moveTo(xs[0], ly); g.lineTo(xs[3], ly); g.stroke(); g.globalAlpha = 1;
+  g.strokeStyle = W[2]; g.beginPath(); g.moveTo(xs[0], ly); g.lineTo(xs[li], ly); g.stroke();
+  LEVELS.forEach((l, i) => {
+    g.beginPath(); g.arc(xs[i], ly, i === li ? 36 : 24, 0, Math.PI * 2);
+    if (i <= li) { g.fillStyle = i === li ? '#C42222' : W[2]; g.fill(); if (i === li) { g.lineWidth = 6; g.strokeStyle = W[2]; g.stroke(); } }
+    else { g.fillStyle = W[0]; g.fill(); g.lineWidth = 4; g.strokeStyle = W[1]; g.globalAlpha = .35; g.stroke(); g.globalAlpha = 1; }
+    g.fillStyle = W[1]; g.globalAlpha = i <= li ? 1 : .5; g.font = (i === li ? '800 ' : '600 ') + '28px Poppins, sans-serif'; g.fillText(l.pendek, xs[i], ly + 82); g.globalAlpha = 1;
+  });
+  // skor + ajakan
+  g.font = '400 64px Anton, Impact, sans-serif'; const pt = pct + '/100'; const pw = g.measureText(pt).width;
+  g.font = '600 32px Poppins, sans-serif'; const rest = ' Skor Challenge'; const rw = g.measureText(rest).width;
+  const x0 = 540 - (pw + rw) / 2;
+  g.textAlign = 'left'; g.fillStyle = gelap ? emas(1650, 1710) : W[2]; g.font = '400 64px Anton, Impact, sans-serif'; g.fillText(pt, x0, 1712);
+  g.fillStyle = W[1]; g.font = '600 32px Poppins, sans-serif'; g.fillText(rest, x0 + pw, 1708);
+  g.textAlign = 'center'; g.fillStyle = W[2]; g.font = '400 56px Anton, Impact, sans-serif'; g.fillText(isSenior() ? 'KAMU LEVEL MANA?' : 'LU LEVEL MANA?!', 540, 1796);
+  g.fillStyle = W[1]; g.globalAlpha = .85; g.font = '600 26px Poppins, sans-serif'; g.fillText('Cek di ' + BASE_SHORT, 540, 1840); g.globalAlpha = 1;
+  return c;
+}
+const toBlob = c => new Promise(r => c.toBlob(r, 'image/png'));
+// Kartu disiapkan lebih dulu (setelah kartu dibuka & saat nama berubah), supaya tombol bagikan langsung jalan tanpa kehilangan izin share browser.
+let kartu = null, kartuFile = null, kartuUrl = '';
+async function siapkanKartu() {
+  if (!S.h) return;
+  const id = Symbol(); siapkanKartu.id = id;
+  try {
+    const c = await buatKartu(); if (siapkanKartu.id !== id) return;
+    const blob = await toBlob(c); if (siapkanKartu.id !== id) return;
+    kartu = c; kartuFile = new File([blob], 'gelar-' + S.h.id + '.png', { type: 'image/png' });
+    if (kartuUrl) URL.revokeObjectURL(kartuUrl);
+    kartuUrl = URL.createObjectURL(blob); $('preview').src = kartuUrl;
+  } catch (e) { kartu = null; kartuFile = null; }
+}
+const unduhFile = () => { const a = document.createElement('a'); a.href = kartuUrl; a.download = kartuFile.name; document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 300); };
+const unduhKartu = async () => {
+  if (!kartuFile) await siapkanKartu();
+  if (kartuFile) { track('share', { metode: 'unduh', tokoh: S.h.id, skor: S.pct }); unduhFile(); toast('Kartu tersimpan. Upload ke Story, tag temen lu!'); } else toast('Waduh, kartunya belum bisa dibikin di browser ini. Screenshot aja ya, Brobries.');
+};
+const bagikanKartu = async () => {
+  if (!kartuFile) await siapkanKartu();
+  if (!kartuFile) return toast('Waduh, kartunya belum bisa dibikin di browser ini. Screenshot aja ya, Brobries.');
+  const teks = caption() + linkTantang();
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [kartuFile] })) { await navigator.share({ files: [kartuFile], text: teks }); catatShare('bagikan_native'); return; }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  catatShare('unduh_salin'); unduhFile(); try { await navigator.clipboard.writeText(teks); } catch (e) {}
+  toast('Kartu tersimpan, caption tersalin. Upload kartunya ke Story, terus tempel captionnya.', 5200);
+};
+// Nama panggilan wajib untuk kartu yang dibagikan/diunduh. Kalau kosong, minta lewat lembar bawah, lalu lanjut otomatis.
+let namaLanjut = null;
+function butuhNama(lanjut, aksi) {
+  if (saring($('nama').value).nama) return lanjut();
+  namaLanjut = lanjut;
+  $('namaDlgInput').value = $('nama').value;
+  $('namaDlgErr').textContent = '';
+  $('namaDlgSub').innerHTML = 'Kartu lu bakal ditulis <b>"[nama lu] resmi jadi ' + esc(level(S.pct)) + '"</b>.';
+  $('namaDlgOkTxt').textContent = aksi === 'unduh' ? 'Unduh Kartu' : 'Bagikan Hasil';
+  track('nama_diminta', { aksi });
+  try { $('namaDlg').showModal(); } catch (e) { $('namaDlg').setAttribute('open', ''); }
+  setTimeout(() => { try { $('namaDlgInput').focus(); } catch (e) {} }, 60);
+}
+$('namaDlgInput').addEventListener('input', () => { $('nama').value = $('namaDlgInput').value; namaUpdate(); $('namaDlgErr').textContent = saring($('namaDlgInput').value).alasan; });
+$('namaDlgForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const r = saring($('namaDlgInput').value);
+  if (!r.nama) { $('namaDlgErr').textContent = r.alasan || 'Isi nama panggilan lu dulu (huruf aja, maksimal 14).'; $('namaDlgInput').focus(); return; }
+  $('nama').value = r.nama; namaUpdate();
+  clearTimeout(tNama); await siapkanKartu();   // kartu dibuat ulang dengan nama sebelum dibagikan
+  $('namaDlg').close();
+  track('nama_diisi', {});
+  const f = namaLanjut; namaLanjut = null;
+  if (f) f();
+});
+$('namaDlgBatal').addEventListener('click', () => { namaLanjut = null; $('namaDlg').close(); track('nama_batal', {}); });
+$('btnShareImg').onclick = () => butuhNama(bagikanKartu, 'bagikan');
+$('btnDl').onclick = () => butuhNama(unduhKartu, 'unduh');
+// Datang dari tautan teman/pasangan: sapa di hero
+if (dari) {
+  const p = byId[dari], pn = esc(saringRaw(dariNama) || 'Temen lu');
+  $('heroSub').innerHTML = dariSkor
+    ? `<b>${pn} resmi jadi ${level(dariSkor, p.gender)}</b> dengan skor ${dariSkor}/100. Sekarang giliran lu. Bisa nyamain?!`
+    : `<b>${pn} udah ikut dan dapet ${p.nama}.</b> Sekarang giliran lu. 2 menit doang.`;
+}
+$('btnUlang').onclick = () => { S.tebak = ''; S.pas = ''; S.jawab = []; S.hab = {}; track('quiz_restart', {}); show('intro'); };
+
+// Kenalan sama SMGT! (tanpa pop-up), diisi dari CONFIG.produk. Tanpa klaim manfaat; hanya isi, ritual, dan legalitas.
+(() => {
+  const P = CONFIG.produk;
+  $('prodLead').textContent = P.lead;
+  $('storyBuy').href = P.beli;
+  $('storyBuy').addEventListener('click', () => track('offer_click', { jenis: 'story', label: 'coba_smgt_story', tokoh: S.h ? S.h.id : '', skor: S.pct, gender: S.gender }));
+  if (P.gambar) $('prodImg').src = P.gambar; else $('prodImg').remove();
+  const klik = (jenis, label) => track('offer_click', { jenis, label, tokoh: S.h ? S.h.id : '', skor: S.pct, gender: S.gender });
+  $('packs').innerHTML = P.paket.map(p => `<a class="pack ${p.hemat ? 'hemat' : ''}" href="${esc(P.beli)}" target="_blank" rel="noopener" data-paket="${esc(p.id)}">
+      <small>${esc(p.label)}</small><b>${esc(p.nama)}</b><span>${esc(p.isi)}</span>
+      <span class="harga">${esc(p.harga)}</span>${p.coret ? '<s>' + esc(p.coret) + '</s>' : ''}</a>`).join('');
+  $('buy').innerHTML = `<a class="btn btn-gold" href="${esc(P.beli)}" target="_blank" rel="noopener" data-jenis="beli"><i class="ph-bold ph-shopping-cart-simple"></i>Coba SMGT!</a>
+    <div class="row2">${P.toko.map(s => `<a class="btn btn-ghost" href="${esc(s.url)}" target="_blank" rel="noopener" data-jenis="toko" data-label="${esc(s.label)}"><i class="ph-bold ${s.ikon}"></i>${esc(s.label)}</a>`).join('')}</div>
+    <a class="link" href="${esc(P.agen)}" target="_blank" rel="noopener" data-jenis="agen" style="justify-self:center"><i class="ph-bold ph-map-pin"></i>Cari agen terdekat</a>`;
+  $('packs').querySelectorAll('a').forEach(el => el.addEventListener('click', () => klik('paket', el.dataset.paket)));
+  $('buy').querySelectorAll('a').forEach(el => el.addEventListener('click', () => klik(el.dataset.jenis, el.dataset.label || el.dataset.jenis)));
+  $('prodFine').textContent = 'Hasil kuis lu tidak dipengaruhi produk apa pun. Klaim manfaat sesuai halaman resmi SMGT!. ' + P.legal + ' Baca aturan pakai di kemasan.';
+  const io = new IntersectionObserver((es, ob) => es.forEach(e => {
+    if (e.isIntersecting) { track(e.target.id === 'secTips' ? 'tips_view' : e.target.id === 'lead' ? 'lead_view' : 'offer_view', { gender: S.gender }); ob.unobserve(e.target); }
+  }), { threshold: .25 });
+  io.observe($('secSmgt')); io.observe($('secTips')); io.observe($('lead'));
+})();
+
+// Contoh kartu hasil di landing (dibuat dari kode kartu yang sama)
+setTimeout(() => {
+  buatKartu({ h: byId.bima, pct: 78, nama: '', gender: 'pria', contoh: true })
+    .then(c => toBlob(c)).then(bl => { $('sampleImg').src = URL.createObjectURL(bl); }).catch(() => {});
+}, 400);
+
+track('landing_view', { dari_tantangan: !!dari });
+if (dari) track('challenge_visit', { dari: dari, skor_pengirim: dariSkor || null, ada_nama: !!dariNama });
+})();
+</script>
+</body>
+</html>

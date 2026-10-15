@@ -1,0 +1,138 @@
+/* Phosphor Icons Web 2.1.1 (bold), MIT. Di-host sendiri & dipangkas ke ikon yang dipakai kuis. Sumber: @phosphor-icons/web@2.1.1/src/bold */
+@font-face {
+  font-family: "Phosphor-Bold";
+  src:
+    url("./Phosphor-Bold.woff2") format("woff2"),
+    url("./Phosphor-Bold.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;}
+.ph-bold {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "Phosphor-Bold" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;}
+.ph-bold.ph-alarm:before {
+  content: "\e006";}
+.ph-bold.ph-arrow-counter-clockwise:before {
+  content: "\e038";}
+.ph-bold.ph-arrow-left:before {
+  content: "\e058";}
+.ph-bold.ph-arrow-right:before {
+  content: "\e06c";}
+.ph-bold.ph-atom:before {
+  content: "\e5e4";}
+.ph-bold.ph-barbell:before {
+  content: "\e0b6";}
+.ph-bold.ph-bowl-food:before {
+  content: "\eaa4";}
+.ph-bold.ph-brain:before {
+  content: "\e74e";}
+.ph-bold.ph-buildings:before {
+  content: "\e102";}
+.ph-bold.ph-calendar-check:before {
+  content: "\e712";}
+.ph-bold.ph-caret-down:before {
+  content: "\e136";}
+.ph-bold.ph-check:before {
+  content: "\e182";}
+.ph-bold.ph-check-circle:before {
+  content: "\e184";}
+.ph-bold.ph-crosshair:before {
+  content: "\e1d6";}
+.ph-bold.ph-device-mobile:before {
+  content: "\e1e0";}
+.ph-bold.ph-download-simple:before {
+  content: "\e20c";}
+.ph-bold.ph-drop:before {
+  content: "\e210";}
+.ph-bold.ph-fire:before {
+  content: "\e242";}
+.ph-bold.ph-flag:before {
+  content: "\e244";}
+.ph-bold.ph-gauge:before {
+  content: "\e628";}
+.ph-bold.ph-gift:before {
+  content: "\e276";}
+.ph-bold.ph-globe-hemisphere-east:before {
+  content: "\e28a";}
+.ph-bold.ph-heart:before {
+  content: "\e2a8";}
+.ph-bold.ph-heartbeat:before {
+  content: "\e2ac";}
+.ph-bold.ph-lightbulb:before {
+  content: "\e2dc";}
+.ph-bold.ph-lightning:before {
+  content: "\e2de";}
+.ph-bold.ph-link:before {
+  content: "\e2e2";}
+.ph-bold.ph-list-checks:before {
+  content: "\eadc";}
+.ph-bold.ph-list-numbers:before {
+  content: "\e2f6";}
+.ph-bold.ph-lock-key-open:before {
+  content: "\e300";}
+.ph-bold.ph-lock-simple:before {
+  content: "\e308";}
+.ph-bold.ph-map-pin:before {
+  content: "\e316";}
+.ph-bold.ph-mask-happy:before {
+  content: "\e9f4";}
+.ph-bold.ph-moon-stars:before {
+  content: "\e58e";}
+.ph-bold.ph-person-simple-run:before {
+  content: "\e730";}
+.ph-bold.ph-person-simple-walk:before {
+  content: "\e73a";}
+.ph-bold.ph-planet:before {
+  content: "\e652";}
+.ph-bold.ph-seal-check:before {
+  content: "\e606";}
+.ph-bold.ph-share-fat:before {
+  content: "\ed52";}
+.ph-bold.ph-shield-check:before {
+  content: "\e40c";}
+.ph-bold.ph-shopping-bag:before {
+  content: "\e416";}
+.ph-bold.ph-shopping-cart-simple:before {
+  content: "\e420";}
+.ph-bold.ph-sign-in:before {
+  content: "\e428";}
+.ph-bold.ph-smiley:before {
+  content: "\e436";}
+.ph-bold.ph-sneaker-move:before {
+  content: "\ed60";}
+.ph-bold.ph-storefront:before {
+  content: "\e470";}
+.ph-bold.ph-sun-horizon:before {
+  content: "\e5b6";}
+.ph-bold.ph-target:before {
+  content: "\e47c";}
+.ph-bold.ph-timer:before {
+  content: "\e492";}
+.ph-bold.ph-trophy:before {
+  content: "\e67e";}
+.ph-bold.ph-video-camera:before {
+  content: "\e4da";}
+.ph-bold.ph-whatsapp-logo:before {
+  content: "\e5d0";}
+.ph-bold.ph-wind:before {
+  content: "\e5d2";}
